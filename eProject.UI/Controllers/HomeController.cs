@@ -1,4 +1,5 @@
-﻿using eProject.UI.Models;
+﻿using eProject.Application.Abstracts;
+using eProject.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,14 +8,16 @@ namespace eProject.UI.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IRoleServices _roleServices;
+        public HomeController(ILogger<HomeController> logger, IRoleServices roleServices)
         {
             _logger = logger;
+            _roleServices = roleServices;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            ViewBag.Role = await _roleServices.GetAll();
             return View();
         }
 

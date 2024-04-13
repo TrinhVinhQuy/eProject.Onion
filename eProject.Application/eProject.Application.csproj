@@ -14,10 +14,4 @@
     <ProjectReference Include="..\eProject.DataAccess\eProject.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Abstracts\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

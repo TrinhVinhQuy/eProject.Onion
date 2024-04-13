@@ -1,4 +1,8 @@
-﻿using eProject.DataAccess.Data;
+﻿using eProject.Application.Abstracts;
+using eProject.Application.Services;
+using eProject.DataAccess.Data;
+using eProject.DataAccess.Repository;
+using eProject.Domain.Abstracts;
 using eProject.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +23,14 @@ namespace eProject.Insfrastructure.Configuration
         public static void AddAutoMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        }
+        public static void AddDependencyInjection(this IServiceCollection services)
+        {
+            // Add Services
+            services.AddTransient<IRoleServices, RoleServices>();
+
+            // Add RepositoryBase
+            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>)); ;
         }
         public static void AddAuthorizationGlobal(this IServiceCollection services, IConfiguration configuration)
         {

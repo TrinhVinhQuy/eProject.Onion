@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using eProject.Application.DTOs.Role;
+using eProject.Domain.Entities;
 
 namespace eProject.Application.Configuration
 {
@@ -6,6 +8,7 @@ namespace eProject.Application.Configuration
     {
         public AutomapConfig()
         {
+            CreateMap<Role, RoleDTO>().ReverseMap();
         }
     }
 }

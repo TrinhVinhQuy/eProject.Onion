@@ -24,8 +24,4 @@
 		<ProjectReference Include="..\eProject.Domain\eProject.Domain.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Repository\" />
-	</ItemGroup>
-
 </Project>

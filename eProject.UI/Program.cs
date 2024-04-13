@@ -8,7 +8,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.ConfigureIdentity(builder.Configuration);
 builder.Services.AddAutoMapper();
-
+builder.Services.AddDependencyInjection();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
