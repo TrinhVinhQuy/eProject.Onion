@@ -1,9 +1,32 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - eProject.UI</title>
+    <title>@Html.Raw(ViewData["Title"])</title>
+    <meta charset=utf-8 />
+    <meta http-equiv=X-UA-Compatible content="IE=edge" />
+    <meta name=viewport content="width=device-width, initial-scale=1" />
+    <meta name=google-site-verification content="rBIMdYsqH_JI-JtDEHV5Lac7XIm7mJCoiNYxaeAm4GQ" />
+    <meta http-equiv=Content-Language content=vi />
+
+    <meta name="title" content="@Html.Raw(ViewData["Title"])">
+    <meta name="description" content="@Html.Raw(ViewData["Description"])" />
+    <meta name="keyword" content="@Html.Raw(ViewData["Keywords"])">
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta itemprop="image" content="@Html.Raw(ViewData["SeoImage"])" />
+
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:type" content="website" />
+    <meta property="og:type" content=article />
+    <meta property="og:url" content="@Html.Raw(ViewData["SeoLink"])" />
+    <meta property="og:title" content="@Html.Raw(ViewData["Title"])" />
+    <meta property="og:site_name" content="eProject - Trịnh Xuân Vinh Quy" />
+    <meta property="og:description" content="@Html.Raw(ViewData["Title"])" />
+    <meta property="og:image:alt" content="@Html.Raw(ViewData["Title"])" />
+    <meta name="author" content="eProject - Trịnh Xuân Vinh Quy">
+    <link rel="alternate" href="@Html.Raw(ViewData["SeoLink"])" hreflang="vi-vn" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/eProject.UI.styles.css" asp-append-version="true" />

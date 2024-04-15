@@ -9,18 +9,23 @@ namespace eProject.UI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IRoleServices _roleServices;
-        public HomeController(ILogger<HomeController> logger, IRoleServices roleServices)
+        private readonly IWebHostEnvironment _env;
+        public HomeController(ILogger<HomeController> logger, IRoleServices roleServices, IWebHostEnvironment env)
         {
             _logger = logger;
             _roleServices = roleServices;
+            _env = env;
         }
 
         public async Task<IActionResult> Index()
         {
+            string host = HttpContext.Request.Host.Value;
+            string scheme = HttpContext.Request.Scheme;
+            ViewData["Host"] = scheme + "://" + host;
+
             ViewBag.Role = await _roleServices.GetAll();
             return View();
         }
-
         public IActionResult Privacy()
         {
             return View();

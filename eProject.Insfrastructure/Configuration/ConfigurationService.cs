@@ -5,7 +5,8 @@ using eProject.DataAccess.Repository;
 using eProject.Domain.Abstracts;
 using eProject.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,11 +27,11 @@ namespace eProject.Insfrastructure.Configuration
         }
         public static void AddDependencyInjection(this IServiceCollection services)
         {
+            // Add AddScoped
+            services.AddScoped<IRepositoryBase<Role>, RepositoryBase<Role>>();
             // Add Services
             services.AddTransient<IRoleServices, RoleServices>();
 
-            // Add RepositoryBase
-            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>)); ;
         }
         public static void AddAuthorizationGlobal(this IServiceCollection services, IConfiguration configuration)
         {
@@ -53,6 +54,5 @@ namespace eProject.Insfrastructure.Configuration
                     googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
                 });
         }
-
     }
 }

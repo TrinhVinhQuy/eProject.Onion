@@ -1,5 +1,8 @@
+﻿using eProject.Application.Abstracts;
 using eProject.DataAccess;
+using eProject.DataAccess.Data;
 using eProject.Insfrastructure.Configuration;
+using eProject.UI.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.ConfigureIdentity(builder.Configuration);
 builder.Services.AddAutoMapper();
 builder.Services.AddDependencyInjection();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,14 +29,12 @@ app.UseRouting();
 app.AutoMigration().GetAwaiter().GetResult();
 app.UseAuthorization();
 
-app.MapAreaControllerRoute(
-    name: "Admin",
-    areaName: "Admin",
-    pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+// Truy cập ApplicationDbContext từ phạm vi của một scope hợp lệ
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    app.ConfigureRouting(dbContext);
+}
 
 app.Run();
 

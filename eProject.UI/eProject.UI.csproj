@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -16,6 +16,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="SeoTags" Version="2.0.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\eProject.Insfrastructure\eProject.Insfrastructure.csproj" />
