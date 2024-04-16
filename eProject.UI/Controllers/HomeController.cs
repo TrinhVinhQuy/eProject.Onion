@@ -1,18 +1,16 @@
 ﻿using eProject.Application.Abstracts;
-using eProject.UI.Models;
+using eProject.Application.DTOs.Role;
+using eProject.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace eProject.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IRoleServices _roleServices;
+        private readonly IBaseServices<Role> _roleServices;
         private readonly IWebHostEnvironment _env;
-        public HomeController(ILogger<HomeController> logger, IRoleServices roleServices, IWebHostEnvironment env)
+        public HomeController(IBaseServices<Role> roleServices, IWebHostEnvironment env)
         {
-            _logger = logger;
             _roleServices = roleServices;
             _env = env;
         }
@@ -23,18 +21,12 @@ namespace eProject.UI.Controllers
             string scheme = HttpContext.Request.Scheme;
             ViewData["Host"] = scheme + "://" + host;
 
-            ViewBag.Role = await _roleServices.GetAll();
+            ViewBag.Role = await _roleServices.GetAllAsync();
             return View();
         }
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
         }
     }
 }

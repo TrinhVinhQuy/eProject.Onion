@@ -1,0 +1,17 @@
+﻿<aside class="cart-bar-wrapper">
+    <div class="cart-bar__close">
+        <a class="d-flex align-items-center justify-content-center" href="javascript:void(0);"><i class="fal fa-times"></i></a>
+    </div>
+    <div class="cart-bar">
+        <h4 class="cart-bar__title">Giỏ hàng (<span id="txtCartPopup">0</span>)</h4>
+        <div class="cart-bar__lists" id="listCart">
+        </div>
+        <div class="cart-bar__subtotal d-flex align-items-center justify-content-between">
+            <span>Thành tiền:</span>
+            <span>0</span>
+        </div>
+        <div class="btns d-flex align-items-center justify-content-center">
+            <a asp-controller="Cart" asp-action="Index" class="site-btn">Tới giỏ hàng</a>
+        </div>
+    </div>
+</aside>

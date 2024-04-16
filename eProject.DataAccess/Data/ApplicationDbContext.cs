@@ -1,6 +1,7 @@
 ﻿using eProject.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using System.Reflection.Emit;
 
 namespace eProject.DataAccess.Data
 {
@@ -11,9 +12,27 @@ namespace eProject.DataAccess.Data
         { }
         public DbSet<Role> Role { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<ProductImage> ProductImage { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Posts> Posts { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+
+            builder.Entity<Product>(entity =>
+            {
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.Discount).HasColumnType("decimal(18, 0)");
+            });
+            builder.Entity<OrderDetail>(entity =>
+            {
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
+            });
 
             builder.Entity<Role>().HasData(
                 new Role
@@ -61,6 +80,7 @@ namespace eProject.DataAccess.Data
                     IsActive = true,
                 }
             );
+
         }
     }
 }

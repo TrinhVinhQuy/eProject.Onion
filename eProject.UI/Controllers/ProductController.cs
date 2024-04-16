@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using eProject.Application.Abstracts;
+using eProject.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eProject.UI.Controllers
 {
     public class ProductController : Controller
     {
-        public IActionResult Index(int id ,string name)
+        public async Task<IActionResult> Index(string product)
         {
-            ViewBag.Name = name + id;
+            ViewBag.Url = product;
             return View();
         }
     }

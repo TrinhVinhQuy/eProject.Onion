@@ -8,7 +8,7 @@ namespace eProject.Application.Configuration
     {
         public AutomapConfig()
         {
-            CreateMap<Role, RoleDTO>().ReverseMap();
+            CreateMap<Role, RoleDTO>();
         }
     }
 }

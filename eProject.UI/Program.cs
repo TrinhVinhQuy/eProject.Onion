@@ -1,7 +1,4 @@
-﻿using eProject.Application.Abstracts;
-using eProject.DataAccess;
-using eProject.DataAccess.Data;
-using eProject.Insfrastructure.Configuration;
+﻿using eProject.Insfrastructure.Configuration;
 using eProject.UI.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.ConfigureIdentity(builder.Configuration);
-builder.Services.AddAutoMapper();
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddDependencyInjection();
 
 var app = builder.Build();
@@ -26,15 +23,24 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.AutoMigration().GetAwaiter().GetResult();
+//app.AutoMigration().GetAwaiter().GetResult();
 app.UseAuthorization();
 
-// Truy cập ApplicationDbContext từ phạm vi của một scope hợp lệ
-using (var scope = app.Services.CreateScope())
+app.ConfigureRouting();
+app.Use(async (context, next) =>
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    app.ConfigureRouting(dbContext);
-}
+    await next();
+
+    // Nếu không tìm thấy trang
+    if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
+    {
+        // Thiết lập trạng thái response
+        context.Response.StatusCode = 404;
+
+        // Gửi thông báo "That page can’t be found."
+        context.Response.Redirect("/Home/Error");
+    }
+});
 
 app.Run();
 
