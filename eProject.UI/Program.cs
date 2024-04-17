@@ -7,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.ConfigureIdentity(builder.Configuration);
-//builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddDependencyInjection();
 
