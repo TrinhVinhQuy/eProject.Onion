@@ -1,4 +1,6 @@
-﻿using eProject.Application.Abstracts;
+﻿using AutoMapper;
+using eProject.Application.Abstracts;
+using eProject.Application.DTOs.Category;
 using eProject.Application.DTOs.Role;
 using eProject.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -7,12 +9,12 @@ namespace eProject.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IBaseServices<Role> _roleServices;
-        private readonly IWebHostEnvironment _env;
-        public HomeController(IBaseServices<Role> roleServices, IWebHostEnvironment env)
+        private readonly ICategoryServices _categoryServices;
+        private readonly IMapper _mapper;
+        public HomeController(ICategoryServices categpryServices, IMapper mapper)
         {
-            _roleServices = roleServices;
-            _env = env;
+            _categoryServices = categpryServices;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -21,7 +23,9 @@ namespace eProject.UI.Controllers
             string scheme = HttpContext.Request.Scheme;
             ViewData["Host"] = scheme + "://" + host;
 
-            ViewBag.Role = await _roleServices.GetAllAsync();
+            var _cate = await _categoryServices.GetAllAsync();
+            ViewBag.Category = _cate;
+
             return View();
         }
         public IActionResult Error()

@@ -28,10 +28,12 @@ namespace eProject.Insfrastructure.Configuration
         public static void AddDependencyInjection(this IServiceCollection services)
         {
             // Add AddScoped
-            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+            //services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+            services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
             // Add Services
-            services.AddTransient(typeof(IBaseServices<>), typeof(BaseServices<>));
+            //services.AddScoped(typeof(IBaseServices<>), typeof(BaseServices<>));
+            services.AddTransient<ICategoryServices, CategoryServices>();
         }
         public static void AddAuthorizationGlobal(this IServiceCollection services, IConfiguration configuration)
         {

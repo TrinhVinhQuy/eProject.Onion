@@ -1,18 +1,11 @@
 ﻿@{
-    
     ViewData["Title"] = "Trang chủ eProject";
     ViewData["Keywords"] = "Từ khoá - eProject";
     ViewData["Description"] = "Mô tả - eProject";
     ViewData["SeoLink"] = ViewData["Host"] + "/eProject";
     ViewData["SeoImage"] = ViewData["Host"] + "/Imgae";
 }
-@{
-    foreach (var item in ViewBag.Role)
-    {
-        <p>@item.Id</p>
-        <p>@item.Name</p>
-    }
-}
+
 <main>
     <!-- hero area start -->
     <section class="hero__area hero__area--2 position-relative custom-padding">
@@ -35,7 +28,6 @@
                 <div class="col-xl-6 col-lg-5">
                     <div class="hero__thumb hero__thumb--2 position-relative">
                         <img src="assets/images/hero/hero-img-2-1.png" alt="img">
-                        @* <a href="http://www.youtube.com/embed/4xe72U7mXNg?rel=0&amp;controls=0&amp;showinfo=0" data-rel="lightcase:myCollection" data-animation="fadeInLeft" class="video-btn video-btn__2 d-flex align-items-center"><i class="fas fa-play"></i><span class="border-effect">play video</span></a> *@
                     </div>
                 </div>
             </div>
@@ -106,63 +98,51 @@
                 </div>
             </div>
             <div class="feature__slider owl-carousel slider-nav">
-                <div class="feature__item">
-                    <div class="mt-30">
-                        <div class="topgrade__item topgrade__item--2 text-center">
-                            <div class="thumb">
-                                <img src="assets/images/top-grade/tg-2-1.jpg" alt="">
-                                <span class="count">01</span>
+                @{
+                    int count = 0;
+                    foreach (var item in ViewBag.Category)
+                    {
+                        count++;
+                        if (count % 2 == 0)
+                        {
+                            <div class="feature__item">
+                                <div class="mt-30">
+                                    <div class="topgrade__item topgrade__item--2 text-center">
+                                        <div class="thumb">
+                                            <img src="@item.MetaImage" alt="">
+                                            <span class="count">@count</span>
+                                        </div>
+                                        <div class="content mt-20">
+                                            <a href="/danh-muc-@item.MetaLink" class="text-decoration-none title">
+                                                @item.MetaTitle
+                                            </a>
+                                            <p>@item.MetaDescription</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="content mt-20">
-                                <h2 class="title">Hạt Americano</h2>
-                                <p>Hạt cà phê Arabica chất lượng cao, rang vừa, cho hương vị cân bằng, chua thanh nhẹ.</p>
+                        }
+                        if (count % 2 == 1)
+                        {
+                            <div class="feature__item">
+                                <div class="mt-85">
+                                    <div class="topgrade__item topgrade__item--2 text-center">
+                                        <div class="thumb">
+                                            <img src="@item.MetaImage" alt="">
+                                            <span class="count">@count</span>
+                                        </div>
+                                        <div class="content mt-20">
+                                            <a href="/danh-muc-@item.MetaLink" class="text-decoration-none title">
+                                                @item.MetaTitle
+                                            </a>
+                                            <p>@item.MetaDescription</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="feature__item">
-                    <div class="mt-85">
-                        <div class="topgrade__item topgrade__item--2 text-center">
-                            <div class="thumb">
-                                <img src="assets/images/top-grade/tg-2-2.jpg" alt="">
-                                <span class="count">02</span>
-                            </div>
-                            <div class="content mt-20">
-                                <h2 class="title">Hạt arebica</h2>
-                                <p>Hạt cà phê Arabica xanh chưa rang, giữ nguyên hương vị tự nhiên, phù hợp cho những ai yêu thích tự rang xay cà phê.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="feature__item">
-                    <div class="mt-30">
-                        <div class="topgrade__item topgrade__item--2 text-center">
-                            <div class="thumb">
-                                <img src="assets/images/top-grade/tg-2-3.jpg" alt="">
-                                <span class="count">03</span>
-                            </div>
-                            <div class="content mt-20">
-                                <h2 class="title">Hạt hỗn hợp</h2>
-                                <p>Hạt cà phê rang xay hỗn hợp Arabica và Robusta, cho hương vị đậm đà, mạnh mẽ, phù hợp cho những ai thích cà phê mạnh.</p>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="feature__item">
-                    <div class="mt-85">
-                        <div class="topgrade__item topgrade__item--2 text-center">
-                            <div class="thumb">
-                                <img src="assets/images/top-grade/tg-2-4.jpg" alt="">
-                                <span class="count">04</span>
-                            </div>
-                            <div class="content mt-20">
-                                <h2 class="title">Hạt Robasta</h2>
-                                <p>Hạt cà phê Robusta rang xay, cho hương vị đậm đà, hơi đắng, hàm lượng caffeine cao, phù hợp cho những ai thích cà phê mạnh.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        }
+                    }
+                }
             </div>
         </div>
     </section>

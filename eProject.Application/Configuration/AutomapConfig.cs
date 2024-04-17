@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eProject.Application.DTOs.Category;
 using eProject.Application.DTOs.Role;
 using eProject.Domain.Entities;
 
@@ -8,7 +9,8 @@ namespace eProject.Application.Configuration
     {
         public AutomapConfig()
         {
-            CreateMap<Role, RoleDTO>();
+            CreateMap<Role, RoleDTO>().ReverseMap();
+            CreateMap<Category, CategoryDTO>().ReverseMap();
         }
     }
 }
