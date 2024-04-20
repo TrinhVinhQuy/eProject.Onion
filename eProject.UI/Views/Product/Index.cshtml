@@ -79,7 +79,7 @@
                         <div class="tr-wrapper d-flex align-items-center justify-content-between">
                             <div class="title">@Model.Name</div>
                         </div>
-                        <div class="rating-wrapper d-flex align-items-center mb-1" >
+                        <div class="rating-wrapper d-flex align-items-center mb-1">
                             <div class="rattings d-flex align-items-center">
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
@@ -89,7 +89,7 @@
                             </div>
                             <span class="rt-number">04 - Customar Review</span>
                         </div>
-                        <h3 style="font-size: 15px">@Model.MetaDescription</h3>
+                        <h3 style="font-size: 15px; text-align: justify;" class="text-">@Model.MetaDescription</h3>
                         @{
                             if (Model.Quantity > 0)
                             {
@@ -263,143 +263,59 @@
             <div class="row">
                 <div class="col-xl-12">
                     <h2 class="rp-title mb-30">
-                        Reletad Product
+                        Các sản phẩm liên quan
                     </h2>
                 </div>
             </div>
             <div class="row mt-none-30">
-                <div class="col-xl-3 col-lg-6 col-md-6 mt-30">
-                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                            <div class="cart d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                            </div>
-                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-heart"></i></a>
-                            </div>
-                            <div class="view d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-eye"></i></a>
-                            </div>
-                        </div>
-                        <div class="pp__thumb pp__thumb--2 mt-35">
-                            <img class="default" src="assets/images/products/shop/s-p-1.png" alt="">
-                            <img class="on-hover" src="assets/images/products/shop/s-p-2.png" alt="">
-                        </div>
-                        <div class="pp__content pp__content--2 mt-25">
-                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                <div class="pp__cat pp__cat--2">
-                                    <a href="#0">Rosted Coffee</a>
+                @{
+                    foreach (var item in ViewBag.ReletadProduct as List<eProject.Application.DTOs.Product.ProductCategoryDTO>)
+                    {
+                        <div class="col-xl-3 col-lg-6 col-md-6 mt-30">
+                            <div class="pp__item pp__item--2 text-center pt-20 pb-20">
+                                <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
+                                    <div class="cart d-flex align-items-center justify-content-center">
+                                        <a href="#0"><i class="fal fa-shopping-basket"></i></a>
+                                    </div>
+                                    <div class="wishlist d-flex align-items-center justify-content-center">
+                                        <a href="#0"><i class="fal fa-heart"></i></a>
+                                    </div>
+                                    <div class="view d-flex align-items-center justify-content-center">
+                                        <a href="#0"><i class="fal fa-eye"></i></a>
+                                    </div>
+                                </div>
+                                <div class="pp__thumb pp__thumb--2 mt-35">
+                                    <img style="width: 150px" class="default" src="@item.Images.First().Image" alt="">
+                                    <img style="width: 150px" class="on-hover" src="@item.Images.Skip(1).First().Image" alt="">
+                                </div>
+                                <div class="pp__content pp__content--2 mt-25">
+                                    <div class="pp__c-top d-flex align-items-center justify-content-center">
+                                        <div class="pp__cat pp__cat--2">
+                                            <a href="/danh-muc-@item.CategoryMetaLink">@item.CategoryName</a>
+                                        </div>
+                                    </div>
+                                    <h4 class="pp__title pp__title--2">
+                                        <a href="/@item.MetaLink">@item.Name</a>
+                                    </h4>
+                                    <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
+                                        <p class="label">Price - </p>
+                                        @{
+                                            if (item.Discount > 0)
+                                            {
+                                                <span class="price"> @Convert.ToInt32(item.Price - item.Price * item.Discount / 100).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")  / <span class="regular"><del>@Convert.ToInt32(item.Price).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")</del></span></span>
+                                                <span class="price ml-5" style="color: #00000099">-@item.Discount%</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="price"> @Convert.ToInt32(item.Price - item.Price * item.Discount / 100).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")</span>
+                                            }
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                            <h4 class="pp__title pp__title--2">
-                                <a href="product-details.html">vicaragua Coffee Beans</a>
-                            </h4>
-                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                <h6 class="label">Price - </h6>
-                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 mt-30">
-                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                            <div class="cart d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                            </div>
-                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-heart"></i></a>
-                            </div>
-                            <div class="view d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-eye"></i></a>
-                            </div>
-                        </div>
-                        <div class="pp__thumb pp__thumb--2 mt-35">
-                            <img class="default" src="assets/images/products/shop/s-p-2.png" alt="">
-                            <img class="on-hover" src="assets/images/products/shop/s-p-3.png" alt="">
-                        </div>
-                        <div class="pp__content pp__content--2 mt-25">
-                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                <div class="pp__cat pp__cat--2">
-                                    <a href="#0">Rosted Coffee</a>
-                                </div>
-                            </div>
-                            <h4 class="pp__title pp__title--2">
-                                <a href="product-details.html">CAFFÈ LATTE</a>
-                            </h4>
-                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                <h6 class="label">Price - </h6>
-                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 mt-30">
-                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                            <div class="cart d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                            </div>
-                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-heart"></i></a>
-                            </div>
-                            <div class="view d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-eye"></i></a>
-                            </div>
-                        </div>
-                        <div class="pp__thumb pp__thumb--2 mt-35">
-                            <img class="default" src="assets/images/products/shop/s-p-3.png" alt="">
-                            <img class="on-hover" src="assets/images/products/shop/s-p-4.png" alt="">
-                        </div>
-                        <div class="pp__content pp__content--2 mt-25">
-                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                <div class="pp__cat pp__cat--2">
-                                    <a href="#0">Rosted Coffee</a>
-                                </div>
-                            </div>
-                            <h4 class="pp__title pp__title--2">
-                                <a href="product-details.html">JAPANIS COFFEE GRED</a>
-                            </h4>
-                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                <h6 class="label">Price - </h6>
-                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 mt-30">
-                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                            <div class="cart d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                            </div>
-                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-heart"></i></a>
-                            </div>
-                            <div class="view d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-eye"></i></a>
-                            </div>
-                        </div>
-                        <div class="pp__thumb pp__thumb--2 mt-35">
-                            <img class="default" src="assets/images/products/shop/s-p-4.png" alt="">
-                            <img class="on-hover" src="assets/images/products/shop/s-p-5.png" alt="">
-                        </div>
-                        <div class="pp__content pp__content--2 mt-25">
-                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                <div class="pp__cat pp__cat--2">
-                                    <a href="#0">Rosted Coffee</a>
-                                </div>
-                            </div>
-                            <h4 class="pp__title pp__title--2">
-                                <a href="product-details.html">AMERICANO COFFEE</a>
-                            </h4>
-                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                <h6 class="label">Price - </h6>
-                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    }
+                }
             </div>
         </div>
     </div>

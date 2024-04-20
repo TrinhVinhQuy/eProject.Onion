@@ -11,6 +11,13 @@ builder.Services.ConfigureIdentity(builder.Configuration);
 builder.Services.AddDependencyInjection();
 
 builder.Services.AddAutoMapper();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(1);
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,7 +33,7 @@ app.UseStaticFiles();
 app.UseRouting();
 //app.AutoMigration().GetAwaiter().GetResult();
 app.UseAuthorization();
-
+app.UseSession();
 app.Use(async (context, next) =>
 {
     await next();

@@ -38,3 +38,49 @@
         }
     });
 }
+function addToCart(itemId, quantity) {
+    console.log(itemId, quantity)
+    $.ajax({
+        type: "POST",
+        url: "/Cart/AddCart",
+        data: {
+            Id: itemId,
+            Quantity: quantity
+        },
+        success: function (response) {
+            if (response > 0) {
+                // Thêm mục vào giỏ hàng thành công
+                alert("Mục đã được thêm vào giỏ hàng!");
+            } else {
+                // Có lỗi xảy ra khi thêm mục vào giỏ hàng
+                alert("Có lỗi xảy ra khi thêm mục vào giỏ hàng.");
+            }
+        },
+        error: function () {
+            // Xử lý lỗi
+            alert("Có lỗi xảy ra khi thực hiện yêu cầu!");
+        }
+    });
+}
+
+function deleteFromCart(itemId) {
+    $.ajax({
+        type: "POST",
+        url: "/Cart/Delete",
+        data: { Id: itemId },
+        success: function (response) {
+            if (response) {
+                // Xóa mục khỏi giỏ hàng thành công
+                alert("Mục đã được xóa khỏi giỏ hàng!");
+            } else {
+                // Có lỗi xảy ra khi xóa mục khỏi giỏ hàng
+                alert("Có lỗi xảy ra khi xóa mục khỏi giỏ hàng.");
+            }
+        },
+        error: function () {
+            // Xử lý lỗi
+            alert("Có lỗi xảy ra khi thực hiện yêu cầu!");
+        }
+    });
+}
+

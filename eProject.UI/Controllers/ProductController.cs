@@ -1,6 +1,7 @@
 ﻿using eProject.Application.Abstracts;
 using eProject.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace eProject.UI.Controllers
 {
@@ -16,14 +17,18 @@ namespace eProject.UI.Controllers
         public async Task<IActionResult> Index(string product)
         {
             var _products = await _productServices.GetByCategoryAsync();
+            var random = new Random();
+            
             var _proDetail = _products.Where(x => x.MetaLink == product);
             if (_proDetail.Count() < 1)
             {
                 return StatusCode(404);
             }
+            var reletadProducts = _products.Where(x => x.CategoryId == _proDetail.First().CategoryId).OrderBy(p => random.Next()).Take(4);
+            ViewBag.ReletadProduct = reletadProducts.ToList();
             var _cate = await _categoryServices.GetAllAsync();
-            ViewBag.CategoryNameH2 = _cate.First(x=>x.Id == _proDetail.First().CategoryId).Name;
-            ViewBag.CategoryLink = _cate.First(x=>x.Id == _proDetail.First().CategoryId).MetaLink;
+            ViewBag.CategoryNameH2 = _cate.First(x => x.Id == _proDetail.First().CategoryId).Name;
+            ViewBag.CategoryLink = _cate.First(x => x.Id == _proDetail.First().CategoryId).MetaLink;
             return View(_proDetail.First());
         }
     }
