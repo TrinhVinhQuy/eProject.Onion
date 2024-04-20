@@ -34,6 +34,7 @@ namespace eProject.Insfrastructure.Configuration
             // Add Services
             //services.AddScoped(typeof(IBaseServices<>), typeof(BaseServices<>));
             services.AddTransient<ICategoryServices, CategoryServices>();
+            services.AddTransient<IProductServices, ProductServices>();
         }
         public static void AddAuthorizationGlobal(this IServiceCollection services, IConfiguration configuration)
         {

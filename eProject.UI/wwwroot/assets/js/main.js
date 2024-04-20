@@ -213,19 +213,36 @@
 		$(this).addClass('active').parent().siblings().find('.pp__item').removeClass('active');
 	});
 
+	//// range slider activation
+	//$("#slider-range").slider({
+	//	range: true,
+	//	min: 0,
+	//	max: 10000,
+	//	values: [0, 10000],
+	//	slide: function (event, ui) {
+	//		$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+	//	}
+	//});
+
+	//$("#amount").val("$" + $("#slider-range").slider("values", 0) +
+	//" - $" + $("#slider-range").slider("values", 1));
 	// range slider activation
+	var maxValue = parseInt($("#slider-range").data("max"));
+	var minValue = parseInt($("#slider-range").data("min"));
 	$("#slider-range").slider({
 		range: true,
-		min: 0,
-		max: 10000,
-		values: [0, 10000],
+		min: minValue,
+		max: maxValue,
+		values: [minValue, maxValue],
 		slide: function (event, ui) {
-			$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+			$("#amount").val(ui.values[0].toLocaleString('vi-VN') + " đ" + " - " + ui.values[1].toLocaleString('vi-VN') + " đ");
+			$("#priceMax").val(ui.values[1]);
+			$("#priceMin").val(ui.values[0]);
 		}
 	});
 
-	$("#amount").val("$" + $("#slider-range").slider("values", 0) +
-	" - $" + $("#slider-range").slider("values", 1));
+	$("#amount").val($("#slider-range").slider("values", 0).toLocaleString('vi-VN') + " đ" + " - " + $("#slider-range").slider("values", 1).toLocaleString('vi-VN') + " đ");
+
 
 	// map active
 	function basicmap() {

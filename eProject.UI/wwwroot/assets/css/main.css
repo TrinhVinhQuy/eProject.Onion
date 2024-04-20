@@ -2378,7 +2378,7 @@ h6 {
     -ms-flex-direction: column;
     flex-direction: column;
     position: absolute;
-    min-width: 240px;
+    width: max-content;
     top: 100%;
     visibility: hidden;
     opacity: 0;
@@ -7981,7 +7981,7 @@ html .ui-button.ui-state-disabled:active {
 }
 
 .product-details__wrapper .pd-img .big-img {
-    min-height: 515px;
+    min-height: 375px;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
@@ -7991,7 +7991,7 @@ html .ui-button.ui-state-disabled:active {
 }
 
     .product-details__wrapper .pd-img .big-img img {
-        width: 200px;
+        height: 100%;
     }
 
 .product-details__wrapper .pd-tab {
@@ -8135,7 +8135,6 @@ html .ui-button.ui-state-disabled:active {
         height: 100%;
         height: 25px;
         width: 2px;
-        background: #E2DFDD;
         left: -20px;
         top: -5px;
     }

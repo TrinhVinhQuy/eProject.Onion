@@ -12,5 +12,6 @@ namespace eProject.Application.Abstracts
     {
         Task<IEnumerable<CategoryDTO>> GetAllAsync();
         Task<CategoryDTO> GetByIdAsync(int id);
+        Task<IEnumerable<CategoryProductCountDTO>> GetCountProductCategoryAsync();
     }
 }

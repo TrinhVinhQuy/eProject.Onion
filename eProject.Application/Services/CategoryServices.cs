@@ -4,6 +4,7 @@ using eProject.Application.DTOs.Category;
 using eProject.Domain.Abstracts;
 using eProject.Domain.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,10 +16,12 @@ namespace eProject.Application.Services
     public class CategoryServices : ICategoryServices
     {
         private readonly IRepositoryBase<Category> _categoryRepository;
+        private readonly IRepositoryBase<Product> _productRepository;
         private readonly IMapper _mapper;
-        public CategoryServices(IRepositoryBase<Category> categoryRepository, IMapper mapper)
+        public CategoryServices(IRepositoryBase<Category> categoryRepository, IRepositoryBase<Product> productRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _productRepository = productRepository;
             _mapper = mapper;
         }
         public async Task DeleteAsync(int id)
@@ -31,7 +34,18 @@ namespace eProject.Application.Services
             var _cate = await _categoryRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<CategoryDTO>>(_cate);
         }
-
+        
+        public async Task<IEnumerable<CategoryProductCountDTO>> GetCountProductCategoryAsync()
+        {
+            var _cate = await _categoryRepository.GetAllAsync();
+            var _product = await _productRepository.GetAllAsync();
+            var listCate = _mapper.Map<IEnumerable<CategoryProductCountDTO>>(_cate);
+            foreach(var cate in listCate)
+            {
+                cate.CountProduct = _product.Where(x=>x.CategoryId == cate.Id).Count();
+            }
+            return listCate;
+        }
         public async Task<CategoryDTO> GetByIdAsync(int id)
         {
             var _cateDetail = await _categoryRepository.GetByIdAsync(id);

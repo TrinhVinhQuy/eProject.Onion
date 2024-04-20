@@ -56,11 +56,12 @@
                                 </li>
                                 <li><a asp-controller="Home" asp-action="Introduce">Giới thiệu</a></li>
                                 <li>
-                                    <a href="#0">Cửa Hàng</a>
+                                    @* <a href="#0">Cửa Hàng</a>
                                     <ul class="sub-menu">
-                                        <li><a asp-controller="Product" asp-action="Index">Cửa hàng</a></li>
+                                        <li><a href="/tat-ca-san-pham">Cửa hàng</a></li>
                                         <li><a asp-controller="Home" asp-action="Reservation">Đặt bàn</a></li>
-                                    </ul>
+                                    </ul> *@
+                                    @await Component.InvokeAsync("CategoryList")
                                 </li>
                             </ul>
                         </nav>
@@ -132,11 +133,12 @@
                                     </li>
                                     <li><a asp-controller="Home" asp-action="Introduce">Giới thiệu</a></li>
                                     <li>
-                                        <a href="#0">Cửa Hàng</a>
+                                        @* <a href="#0">Cửa Hàng</a>
                                         <ul class="sub-menu">
                                             <li><a asp-controller="Product" asp-action="Index">Cửa hàng</a></li>
                                             <li><a asp-controller="Home" asp-action="Reservation">Đặt bàn</a></li>
-                                        </ul>
+                                        </ul> *@
+                                        @await Component.InvokeAsync("CategoryList")
                                     </li>
                                     <li>
                                         <a href="#0">Trang</a>

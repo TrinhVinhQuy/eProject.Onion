@@ -1,10 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace eProject.Domain.Entities
+namespace eProject.Application.DTOs.Product
 {
-    public class Product : BaseEntity
+    public class ProductDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Discount { get; set; }
@@ -16,11 +21,7 @@ namespace eProject.Domain.Entities
         public string MetaDescription { get; set; }
         public string MetaLink { get; set; }
         public string MetaImage { get; set; }
-        [ForeignKey(nameof(Category))]
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
-        public ICollection<OrderDetail> OrderDetails { get; set; }
-        public ICollection<ProductImage> ProductImages { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -11,7 +11,6 @@ builder.Services.ConfigureIdentity(builder.Configuration);
 builder.Services.AddDependencyInjection();
 
 builder.Services.AddAutoMapper();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,7 +27,6 @@ app.UseRouting();
 //app.AutoMigration().GetAwaiter().GetResult();
 app.UseAuthorization();
 
-app.ConfigureRouting();
 app.Use(async (context, next) =>
 {
     await next();
@@ -40,9 +38,11 @@ app.Use(async (context, next) =>
         context.Response.StatusCode = 404;
 
         // Gửi thông báo "That page can’t be found."
-        context.Response.Redirect("/Home/Error");
+        context.Response.Redirect("/error.html");
     }
 });
+app.ConfigureRouting();
+
 
 app.Run();
 

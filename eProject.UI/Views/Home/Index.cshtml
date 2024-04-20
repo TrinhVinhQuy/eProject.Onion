@@ -2,10 +2,25 @@
     ViewData["Title"] = "Trang chủ eProject";
     ViewData["Keywords"] = "Từ khoá - eProject";
     ViewData["Description"] = "Mô tả - eProject";
-    ViewData["SeoLink"] = ViewData["Host"] + "/eProject";
-    ViewData["SeoImage"] = ViewData["Host"] + "/Imgae";
+    ViewData["SeoLink"] = ViewData["Host"];
+    ViewData["SeoImage"] = ViewData["Host"] + "/assets/images/logo/logo.png";
 }
-
+@section Styles {
+    <style>
+        .sale {
+            position: absolute;
+            display: inline-flex;
+            top: 7%;
+            left: 7%;
+            font-size: 14px;
+            width: 40px;
+            height: 40px;
+            background: red;
+            border-radius: 100%;
+            color: white;
+        }
+    </style>
+}
 <main>
     <!-- hero area start -->
     <section class="hero__area hero__area--2 position-relative custom-padding">
@@ -155,43 +170,53 @@
             <div class="row">
                 <div class="col-xl-12 text-center">
                     <div class="section-heading section-heading__black mb-55">
-                        @* <span class="sub-title">Chất lượng hàng đầu</span> *@
+                        <span class="sub-title">Các sản phẩm đang được ưu đãi</span>
                         <h2 class="title">Sản phẩm giảm giá</h2>
                     </div>
                 </div>
             </div>
             <div class="feature__slider owl-carousel slider-nav">
-                <div class="feature__item">
-                    <div class="pp__item pp__item--2 active text-center pt-20 pb-20 w-100" style="background-color:#ffffff73">
-                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                            <div class="cart d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                            </div>
-                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-heart"></i></a>
-                            </div>
-                            <div class="view d-flex align-items-center justify-content-center">
-                                <a href="#0"><i class="fal fa-eye"></i></a>
+                @{
+                    foreach (var item in ViewBag.ProductDiscount)
+                    {
+                        <div class="feature__item">
+                            <div class="pp__item pp__item--2 active text-center pt-20 pb-20 w-100" style="background-color:#ffffff73">
+                                <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
+                                    <div class="cart d-flex align-items-center justify-content-center">
+                                        <a href="#0"><i class="fal fa-shopping-basket"></i></a>
+                                    </div>
+                                    <div class="view d-flex align-items-center justify-content-center">
+                                        <a href="#0"><i class="fal fa-eye"></i></a>
+                                    </div>
+                                </div>
+                                <div class="pp__thumb pp__thumb--2 mt-10">
+                                    <img style="width: 150px" class="on-hover" src="@item.MetaImage" alt="">
+                                </div>
+                                <div class="pp__content pp__content--2 mt-10">
+                                    <div class="pp__cat pp__cat--2">
+                                        @foreach (var category in ViewBag.Category)
+                                        {
+                                            @if (category.Id == item.CategoryId)
+                                            {
+                                                <a class="label" target="_blank" href="/danh-muc-@category.MetaLink">@category.Name</a>
+                                                break;
+                                            }
+                                        }
+                                    </div>
+
+                                    <div class="pp__title pp__title--2">
+                                        <a href="/@item.MetaLink">@item.Name</a>
+                                    </div>
+                                    <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
+                                        <h6 class="label">Giá - </h6>
+                                        <span class="price"> @Convert.ToInt32(item.Price - item.Price * item.Discount / 100).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")  / <span class="regular"><del>@Convert.ToInt32(item.Price).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")</del></span></span>
+                                        <span class="price ml-5" style="color: #00000099">-@item.Discount%</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="pp__thumb pp__thumb--2 mt-35">
-                            <img style="width: 80px" class="default" src="assets/images/products/shop/s-p-1.png" alt="">
-                            <img style="width: 80px" class="on-hover" src="assets/images/products/shop/s-p-2.png" alt="">
-                        </div>
-                        <div class="pp__content pp__content--2 mt-25">
-                            <div class="pp__price--2 pp__title pp__title--2">
-                                <a class=" label" href="#0">Rosted Coffee</a>
-                            </div>
-                            <div class="pp__title pp__title--2">
-                                <a href="product-details.html">vicaragua Coffee Beans</a>
-                            </div>
-                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                <h6 class="label">Price - </h6>
-                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    }
+                }
             </div>
         </div>
     </section>

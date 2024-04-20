@@ -16,7 +16,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="SeoTags" Version="2.0.1" />
+		<PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.7" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\eProject.Insfrastructure\eProject.Insfrastructure.csproj" />

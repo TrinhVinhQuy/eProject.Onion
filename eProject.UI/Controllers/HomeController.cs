@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using eProject.Application.Abstracts;
-using eProject.Application.DTOs.Category;
-using eProject.Application.DTOs.Role;
-using eProject.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eProject.UI.Controllers
@@ -10,13 +7,17 @@ namespace eProject.UI.Controllers
     public class HomeController : Controller
     {
         private readonly ICategoryServices _categoryServices;
+        private readonly IProductServices _productServices;
         private readonly IMapper _mapper;
-        public HomeController(ICategoryServices categpryServices, IMapper mapper)
+        public HomeController(ICategoryServices categpryServices, IMapper mapper, IProductServices productServices)
         {
             _categoryServices = categpryServices;
             _mapper = mapper;
+            _productServices = productServices;
         }
-
+        [Route("")]
+        [Route("home")]
+        [Route("trang-chu")]
         public async Task<IActionResult> Index()
         {
             string host = HttpContext.Request.Host.Value;
@@ -25,6 +26,9 @@ namespace eProject.UI.Controllers
 
             var _cate = await _categoryServices.GetAllAsync();
             ViewBag.Category = _cate;
+
+            var _productDiscount = await _productServices.GetAllAsync();
+            ViewBag.ProductDiscount = _productDiscount.Where(x => x.Discount > 0);
 
             return View();
         }

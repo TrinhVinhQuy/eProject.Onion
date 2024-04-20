@@ -1,5 +1,4 @@
-﻿using eProject.DataAccess.Data;
-
+﻿
 namespace eProject.UI.Configuration
 {
     public static class ConfigurationService
@@ -12,6 +11,10 @@ namespace eProject.UI.Configuration
                     name: "Admin",
                     areaName: "Admin",
                     pattern: "Admin/{controller=Home}/{action=Index}");
+                endpoints.MapControllerRoute(
+                    name: "error",
+                    pattern: "/error.html",
+                    defaults: new { controller = "Home", action = "Error" });
                 endpoints.MapControllerRoute(
                     name: "posts",
                     pattern: "/{posts}.html",
