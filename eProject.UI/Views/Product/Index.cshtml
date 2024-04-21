@@ -121,8 +121,8 @@
                         {
                             <div class="product-quantity d-flex align-items-center">
                                 <span>Số lượng</span>
-                                <input type="number" value="1" min="1" max="@Model.Quantity">
-                                <a class="site-btn" href="#">Thêm giỏ hàng</a>
+                                <input type="number" id="txtNumber" value="1" min="1" max="@Model.Quantity">
+                                <a class="site-btn" id="addCart" data-product="@Model.Id" href="javascript:void(0)">Thêm giỏ hàng</a>
                             </div>
                         }
                         <div class="pd-social-wrapper">
@@ -275,13 +275,13 @@
                             <div class="pp__item pp__item--2 text-center pt-20 pb-20">
                                 <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
                                     <div class="cart d-flex align-items-center justify-content-center">
-                                        <a href="#0"><i class="fal fa-shopping-basket"></i></a>
+                                        <a href="javascript:void(0)" onclick="addToCart('@item.Id','1')"><i class="fal fa-shopping-basket"></i></a>
                                     </div>
                                     <div class="wishlist d-flex align-items-center justify-content-center">
                                         <a href="#0"><i class="fal fa-heart"></i></a>
                                     </div>
                                     <div class="view d-flex align-items-center justify-content-center">
-                                        <a href="#0"><i class="fal fa-eye"></i></a>
+                                        <a href="/@item.MetaLink"><i class="fal fa-eye"></i></a>
                                     </div>
                                 </div>
                                 <div class="pp__thumb pp__thumb--2 mt-35">
@@ -321,4 +321,15 @@
     </div>
     <!-- releted products area end -->
 </main>
+@section Scripts {
+    <script>
+        $('#addCart').click(function () {
+            var Quantity = $('#txtNumber').val();
+            var Id = $(this).data('product');
+            if (Quantity != '') {
+                addToCart(Id, Quantity);
+            }
+        })
+    </script>
+}
 

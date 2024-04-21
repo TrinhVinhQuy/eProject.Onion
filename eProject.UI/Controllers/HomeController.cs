@@ -16,7 +16,6 @@ namespace eProject.UI.Controllers
             _productServices = productServices;
         }
         [Route("")]
-        [Route("home")]
         [Route("trang-chu")]
         public async Task<IActionResult> Index()
         {

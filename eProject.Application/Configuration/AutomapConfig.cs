@@ -16,6 +16,8 @@ namespace eProject.Application.Configuration
 
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Product, ProductCategoryDTO>().ReverseMap();
+            CreateMap<ProductDTO, ProductCart>()
+                .ForMember(dest => dest.Quantity, opt => opt.Ignore());
         }
     }
 }

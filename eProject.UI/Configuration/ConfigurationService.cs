@@ -16,6 +16,10 @@ namespace eProject.UI.Configuration
                     pattern: "/error.html",
                     defaults: new { controller = "Home", action = "Error" });
                 endpoints.MapControllerRoute(
+                    name: "Cart",
+                    pattern: "/gio-hang",
+                    defaults: new { controller = "Cart", action = "Index" });
+                endpoints.MapControllerRoute(
                     name: "posts",
                     pattern: "/{posts}.html",
                     defaults: new { controller = "Posts", action = "Index" });

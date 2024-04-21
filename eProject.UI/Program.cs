@@ -11,6 +11,7 @@ builder.Services.ConfigureIdentity(builder.Configuration);
 builder.Services.AddDependencyInjection();
 
 builder.Services.AddAutoMapper();
+//builder.Services.AddAutoMapper(typeof(eProject.Application.Configuration.AutomapConfig));
 
 builder.Services.AddSession(options =>
 {
