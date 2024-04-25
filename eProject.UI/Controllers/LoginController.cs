@@ -158,7 +158,8 @@ namespace eProject.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterOTP(string email)
         {
-            if (IsValidEmail(email))
+            EmailService emailService = new EmailService();
+            if (emailService.IsValidEmail(email))
             {
                 var _userCheck = await _userServices.GetUserDetailAsync(email);
                 if (_userCheck != null)
@@ -217,22 +218,7 @@ namespace eProject.UI.Controllers
             return false; // Trả về false nếu không tìm thấy mã OTP hoặc mã OTP đã hết hạn
         }
 
-        private bool IsValidEmail(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-                return false;
-
-            try
-            {
-                // Kiểm tra định dạng email bằng regex
-                var regex = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
-                return regex.IsMatch(email);
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                return false;
-            }
-        }
+        
         private bool IsStrongPassword(string password)
         {
             // Kiểm tra độ dài mật khẩu (ít nhất 6 ký tự)

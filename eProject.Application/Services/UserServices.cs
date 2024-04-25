@@ -18,6 +18,16 @@ namespace eProject.Application.Services
             _mapper = mapper;
         }
 
+        public async Task<bool> CheckDuplicatePass(string pass)
+        {
+            var _pass = await _userRepository.GetAllAsync();
+            if (_pass.Where(x => x.Password == pass).Count() > 1)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<IEnumerable<UserLoginDTO>> GetAllUserLoginAsync()
         {
             var _users = await _userRepository.GetAllAsync();
@@ -51,6 +61,12 @@ namespace eProject.Application.Services
         {
             var user = await _userRepository.GetByIdAsync(model.Id);
             _mapper.Map(model, user);
+            await _userRepository.UpdateAsync(user);
+        }
+        public async Task UpdatePassAsync(string password, int Id)
+        {
+            var user = await _userRepository.GetByIdAsync(Id);
+            user.Password = password;
             await _userRepository.UpdateAsync(user);
         }
     }

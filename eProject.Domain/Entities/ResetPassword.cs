@@ -9,8 +9,9 @@ namespace eProject.Domain.Entities
 {
     public class ResetPassword: BaseEntity
     {
-        public string Code { get; set; }
+        public Guid Code { get; set; }
         public DateTime CreatedOn { get; set; }
+        public string? Password { get; set; }
         [ForeignKey(nameof(User))]
         public int UserId { get; set; }
         public User User { get; set; }

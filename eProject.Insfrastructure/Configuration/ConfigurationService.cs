@@ -36,6 +36,7 @@ namespace eProject.Insfrastructure.Configuration
             services.AddTransient<IUserServices, UserServices>();
             services.AddTransient<IOrderDetailServices, OrderDetailServices>();
             services.AddTransient<IOrderServices, OrderServiecs>();
+            services.AddTransient<IResetPasswordServices, ResetPasswordServices>();
         }
         public static void AddAuthorizationGlobal(this IServiceCollection services, IConfiguration configuration)
         {

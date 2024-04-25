@@ -5,8 +5,9 @@ namespace eProject.Application.Abstracts
 {
     public interface IResetPasswordServices
     {
-        Task UpdateAsync(ResetPasswordDTO model);
+        Task UpdateAsync(ResetPassword model);
         Task<ResetPassword> InsertAsync(ResetPassword entity);
-        Task<ResetPasswordDTO> GetByCodeAsync(string code);
+        Task<ResetPasswordDTO> GetByCodeAsync(Guid code);
+        Task<bool> CheckDuplicatePass(string pass);
     }
 }

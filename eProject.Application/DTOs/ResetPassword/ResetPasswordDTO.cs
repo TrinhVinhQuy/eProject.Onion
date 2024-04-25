@@ -11,7 +11,7 @@ namespace eProject.Application.DTOs.ResetPassword
     public class ResetPasswordDTO
     {
         public int Id { get; set; }
-        public string Code { get; set; }
+        public Guid Code { get; set; }
         public DateTime CreatedOn { get; set; }
         public int UserId { get; set; }
         public bool IsActive { get; set; }

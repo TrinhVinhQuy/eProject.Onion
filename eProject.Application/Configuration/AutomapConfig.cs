@@ -3,6 +3,7 @@ using eProject.Application.DTOs.Category;
 using eProject.Application.DTOs.Order;
 using eProject.Application.DTOs.OrderDetail;
 using eProject.Application.DTOs.Product;
+using eProject.Application.DTOs.ResetPassword;
 using eProject.Application.DTOs.Role;
 using eProject.Application.DTOs.User;
 using eProject.Domain.Entities;
@@ -28,6 +29,8 @@ namespace eProject.Application.Configuration
             CreateMap<Order, OrderDTO>().ReverseMap();
 
             CreateMap<OrderDetail, OrderDetailDTO>().ReverseMap();
+
+            CreateMap<ResetPassword, ResetPasswordDTO>().ReverseMap();
         }
     }
 }

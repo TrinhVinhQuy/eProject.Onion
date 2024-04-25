@@ -17,7 +17,17 @@ namespace eProject.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<ResetPasswordDTO> GetByCodeAsync(string code)
+        public async Task<bool> CheckDuplicatePass(string pass)
+        {
+            var _pass = await _resetRepository.GetAllAsync();
+            if (_pass.Where(x=>x.Password == pass).Count()>1)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<ResetPasswordDTO> GetByCodeAsync(Guid code)
         {
             var resets = await _resetRepository.GetAllAsync();
             var reset = _mapper.Map<ResetPasswordDTO>(resets.FirstOrDefault(x=>x.Code == code));
@@ -29,10 +39,10 @@ namespace eProject.Application.Services
             return await _resetRepository.InsertAsync(entity);
         }
 
-        public async Task UpdateAsync(ResetPasswordDTO model)
+        public async Task UpdateAsync(ResetPassword model)
         {
             var reset = await _resetRepository.GetByIdAsync(model.Id);
-            _mapper.Map(model, reset);
+            reset.Password = model.Password;
             await _resetRepository.UpdateAsync(reset);
         }
     }
