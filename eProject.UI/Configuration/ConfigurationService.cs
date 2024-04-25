@@ -12,6 +12,14 @@ namespace eProject.UI.Configuration
                     areaName: "Admin",
                     pattern: "Admin/{controller=Home}/{action=Index}");
                 endpoints.MapControllerRoute(
+                    name: "login",
+                    pattern: "/login",
+                    defaults: new { controller = "Login", action = "Index" });
+                endpoints.MapControllerRoute(
+                    name: "user",
+                    pattern: "/thong-tin-nguoi-dung",
+                    defaults: new { controller = "User", action = "Index" });
+                endpoints.MapControllerRoute(
                     name: "error",
                     pattern: "/error.html",
                     defaults: new { controller = "Home", action = "Error" });

@@ -3,7 +3,7 @@ using eProject.Domain.Entities;
 
 namespace eProject.Application.Abstracts
 {
-    public interface IProductServices: IBaseServices<Product>
+    public interface IProductServices
     {
         Task<IEnumerable<ProductDTO>> GetAllAsync();
         Task<IEnumerable<ProductCategoryDTO>> GetByCategoryAsync();

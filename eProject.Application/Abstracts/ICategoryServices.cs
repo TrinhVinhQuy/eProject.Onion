@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace eProject.Application.Abstracts
 {
-    public interface ICategoryServices: IBaseServices<Category>
+    public interface ICategoryServices
     {
         Task<IEnumerable<CategoryDTO>> GetAllAsync();
         Task<CategoryDTO> GetByIdAsync(int id);

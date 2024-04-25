@@ -27,14 +27,15 @@ namespace eProject.Insfrastructure.Configuration
         }
         public static void AddDependencyInjection(this IServiceCollection services)
         {
-            // Add AddScoped
-            //services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
-            services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+            // Add AddScoped: Sử dụng để chia sẻ cùng một instance trong suốt một yêu cầu HTTP
+            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
-            // Add Services
-            //services.AddScoped(typeof(IBaseServices<>), typeof(BaseServices<>));
+            // Add Services: Sử dụng để tạo ra một instance mới mỗi khi cần
             services.AddTransient<ICategoryServices, CategoryServices>();
             services.AddTransient<IProductServices, ProductServices>();
+            services.AddTransient<IUserServices, UserServices>();
+            services.AddTransient<IOrderDetailServices, OrderDetailServices>();
+            services.AddTransient<IOrderServices, OrderServiecs>();
         }
         public static void AddAuthorizationGlobal(this IServiceCollection services, IConfiguration configuration)
         {

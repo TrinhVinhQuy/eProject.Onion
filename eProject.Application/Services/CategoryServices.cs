@@ -54,13 +54,13 @@ namespace eProject.Application.Services
 
         public async Task<Category> InsertAsync(Category category)
         {
-            await _categoryRepository.InsertAsync(category);
-            return category;
+            return await _categoryRepository.InsertAsync(category);
         }
 
         public async Task UpdateAsync(Category category)
         {
             await _categoryRepository.UpdateAsync(category);
         }
+        
     }
 }

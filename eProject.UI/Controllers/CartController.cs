@@ -4,20 +4,37 @@ using eProject.Application.DTOs.Product;
 using eProject.UI.Models;
 using eProject.UI.Ultility;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace eProject.UI.Controllers
 {
     public class CartController : Controller
     {
         private readonly IProductServices _productServices;
+        private readonly IUserServices _userServices;
         private readonly IMapper _mapper;
-        public CartController(IProductServices productServices, IMapper mapper)
+        public CartController(IProductServices productServices, IMapper mapper, IUserServices userServices)
         {
             _productServices = productServices;
             _mapper = mapper;
+            _userServices = userServices;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var carts = GetSessionCart();
+            ViewBag.Cart = "True";
+            if (carts == null || carts.Count() < 1)
+            {
+                ViewBag.Cart = "";
+            }
+            if (User.FindFirst(ClaimTypes.Email).Value != "")
+            {
+                var _user = await _userServices.GetUserDetailAsync(User.FindFirst(ClaimTypes.Email).Value);
+                ViewBag.Province = _user.Province;
+                ViewBag.District = _user.District;
+                ViewBag.Town = _user.Town;
+                ViewBag.Address = _user.Address;
+            }
             return View();
         }
         [Route("/json/cart")]

@@ -10,10 +10,10 @@ namespace eProject.Domain.Entities
     public class User : BaseEntity
     {
         public string Name { get; set; }
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         public string Email { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        public string? UserName { get; set; }
+        public string? Password { get; set; }
 
         public string? Address { get; set; }
         public int? Province { get; set; }
@@ -23,5 +23,9 @@ namespace eProject.Domain.Entities
         [ForeignKey(nameof(Role))]
         public int RoleId { get; set; }
         public Role Role { get; set; }
+        public ICollection<ResetPassword> ResetPasswords { get; set; }
+        public ICollection<Order> Orders { get; set; }
+        public ICollection<Posts> Posts { get; set; }
+        public ICollection<Review> Reviews { get; set; }
     }
 }

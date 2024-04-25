@@ -290,6 +290,34 @@ namespace eProject.DataAccess.Migrations
                     b.ToTable("ProductImage");
                 });
 
+            modelBuilder.Entity("eProject.Domain.Entities.ResetPassword", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ResetPassword");
+                });
+
             modelBuilder.Entity("eProject.Domain.Entities.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -383,11 +411,9 @@ namespace eProject.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Province")
@@ -400,7 +426,6 @@ namespace eProject.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -445,7 +470,7 @@ namespace eProject.DataAccess.Migrations
             modelBuilder.Entity("eProject.Domain.Entities.Order", b =>
                 {
                     b.HasOne("eProject.Domain.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -475,7 +500,7 @@ namespace eProject.DataAccess.Migrations
             modelBuilder.Entity("eProject.Domain.Entities.Posts", b =>
                 {
                     b.HasOne("eProject.Domain.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -505,6 +530,17 @@ namespace eProject.DataAccess.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("eProject.Domain.Entities.ResetPassword", b =>
+                {
+                    b.HasOne("eProject.Domain.Entities.User", "User")
+                        .WithMany("ResetPasswords")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("eProject.Domain.Entities.Review", b =>
                 {
                     b.HasOne("eProject.Domain.Entities.Product", "Product")
@@ -514,7 +550,7 @@ namespace eProject.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("eProject.Domain.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -550,6 +586,17 @@ namespace eProject.DataAccess.Migrations
                     b.Navigation("OrderDetails");
 
                     b.Navigation("ProductImages");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("eProject.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("Posts");
+
+                    b.Navigation("ResetPasswords");
 
                     b.Navigation("Reviews");
                 });

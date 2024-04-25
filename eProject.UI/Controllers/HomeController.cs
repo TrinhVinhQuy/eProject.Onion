@@ -31,8 +31,14 @@ namespace eProject.UI.Controllers
 
             return View();
         }
+        [Route("/gioi-thieu")]
+        public IActionResult Introduce()
+        {
+            return View();
+        }
         public IActionResult Error()
         {
+            
             return View();
         }
     }

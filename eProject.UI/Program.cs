@@ -8,11 +8,14 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.ConfigureIdentity(builder.Configuration);
 
+
 builder.Services.AddDependencyInjection();
 
 builder.Services.AddAutoMapper();
 //builder.Services.AddAutoMapper(typeof(eProject.Application.Configuration.AutomapConfig));
 
+builder.Services.AddAuthorizationGlobal(builder.Configuration);
+builder.Services.AddSignalR();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(1);
@@ -35,6 +38,7 @@ app.UseRouting();
 //app.AutoMigration().GetAwaiter().GetResult();
 app.UseAuthorization();
 app.UseSession();
+
 app.Use(async (context, next) =>
 {
     await next();

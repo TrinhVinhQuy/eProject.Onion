@@ -2,6 +2,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@using System.Security.Claims;
 @section Styles {
     <style>
         .title-cart {
@@ -116,6 +117,37 @@
                             <input type="radio" name="Pay" id="VnPay" style="margin-right: 20px" value="" />
                             <label for="VnPay">Thanh toán VnPay</label>
                         </div>
+                        <br />
+                        @{
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                if (ViewBag.Cart == "True")
+                                {
+                                    <div id="PayCart">
+                                        <a href="javascript:void(0)" onclick="VnPay()" class="site-btn">Tiền hành thanh toán</a>
+                                        <form id="vnPayForm" asp-controller="VnPay" asp-action="Index" method="post">
+                                            <input type="hidden" name="Province" id="provinceInput">
+                                            <input type="hidden" name="District" id="districtInput">
+                                            <input type="hidden" name="Town" id="townInput">
+                                            <input type="hidden" name="Address" id="addressInput">
+                                        </form>
+                                        <form id="vnPayFormCod" asp-controller="VnPay" asp-action="PayCod" method="post">
+                                            <input type="hidden" name="Province" id="provinceInputCod">
+                                            <input type="hidden" name="District" id="districtInputCod">
+                                            <input type="hidden" name="Town" id="townInputCod">
+                                            <input type="hidden" name="Address" id="addressInputCod">
+                                        </form>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div>
+                                    <center style="color:orangered">Vui lòng đăng nhập để mua hàng</center>
+                                    <a asp-controller="Login" asp-action="Index" class="site-btn">Đăng nhập</a>
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
             </div>
@@ -127,7 +159,6 @@
         function formatCurrency(value) {
             return parseInt(value).toLocaleString('vi-VN') + " đ";
         }
-
         function updateCartTable(data) {
             var cartTableHTML = '<table class="table"><thead><tr><th class="product-thumbnail">Hình ảnh</th><th class="cart-product-name">Tên</th><th class="product-price">Đơn giá</th><th class="product-quantity">Số lượng</th><th class="product-subtotal">Tổng</th></tr></thead><tbody>';
             var cartTableHTMLmobie = '<table class="table" style="width: 100%;"><thead><tr><th class="product-thumbnail ">Sản phẩm</th></tr></thead><tbody>';
@@ -230,5 +261,110 @@
                 }
             });
         }
+    </script>
+    <script>
+        function VnPay() {
+            var province = $('#province').val().trim();
+            var district = $('#district').val().trim();
+            var town = $('#town').val().trim();
+            var address = $('#Address').val().trim();
+            console.log(province, district, town, address);
+
+            // Kiểm tra xem người dùng đã chọn phương thức thanh toán VnPay hay không
+            var isVnPaySelected = $('#VnPay').is(':checked');
+            var isCodSelected = $('#Cod').is(':checked');
+            console.log(isVnPaySelected, isCodSelected);
+            if (province === '' || district === '' || town === '' || address === '') {
+                showAlertModal('danger', "Vui lòng điền đầy đủ thông tin")
+                return;
+            }
+            if (isVnPaySelected) {
+                $('#provinceInput').val(province);
+                $('#districtInput').val(district);
+                $('#townInput').val(town);
+                $('#addressInput').val(address);
+                $('#vnPayForm').submit(); // Gửi form khi thông tin hợp lệ và chọn thanh toán VnPay
+            }
+            if (isCodSelected) {
+                $('#provinceInputCod').val(province);
+                $('#districtInputCod').val(district);
+                $('#townInputCod').val(town);
+                $('#addressInputCod').val(address);
+                $('#vnPayFormCod').submit(); // Gửi form khi thông tin hợp lệ và chọn thanh toán VnPay
+            }
+        }
+    </script>
+    <script src="~/assets/js/data.json"></script>
+    <script>
+        $(document).ready(function () {
+            // Lấy các phần tử input
+            var provinceInput = document.querySelector('input[name="province"]');
+            var districtInput = document.querySelector('input[name="district"]');
+            var townInput = document.querySelector('input[name="town"]');
+
+            // Lấy các phần tử select
+            var provinceSelect = document.getElementById('province');
+            var districtSelect = document.getElementById('district');
+            var townSelect = document.getElementById('town');
+
+            _prodvince = JSON.parse(data);
+            _prodvince.forEach(element => {
+                $('#province').append(`<option value="${element.code}">${element.name}</option>`);
+                if (element.code == provinceInput.value) {
+                    //console.log(element.districts)
+                    element.districts.forEach(_districts => {
+                        $('#district').append(`<option value="${_districts.code}">${_districts.name}</option>`)
+                        if (_districts.code == districtInput.value) {
+                            _districts.wards.forEach(_wards => {
+                                $('#town').append(`<option value="${_wards.code}">${_wards.name}</option>`)
+                            })
+                        }
+                    })
+                }
+            });
+
+            // Cập nhật các giá trị ban đầu từ input
+            // console.log("-1", provinceInput.value)
+            provinceSelect.value = provinceInput.value;
+            districtSelect.value = districtInput.value;
+            townSelect.value = townInput.value;
+        });
+        $(function () {
+            apiProvince = (prodvince) => {
+                let district;
+                $('#province').change(function () {
+                    $('#district').html('<option value="">Chọn quận/huyện</option>')
+                    $('#town').html('<option value = ""> Chọn phường/xã </option>')
+                    let value = $(this).val();
+                    $.each(prodvince, function (index, element) {
+                        if (element.code == value) {
+                            district = element.districts;
+                            $.each(element.districts, function (index, element1) {
+                                $('#district').append(`<option value="${element1.code}">${element1.name}</option>`)
+                            })
+
+                        }
+                    })
+                });
+                $('#district').change(function () {
+
+                    $('#town').html('<option value = ""> Chọn phường/xã </option>')
+                    let value = $(this).val();
+                    let provinceSelectvalue = document.getElementById('province').value - 1;
+                    if (!district) {
+                        district = prodvince[provinceSelectvalue].districts;
+                    }
+                    $.each(district, function (index, element) {
+                        if (element.code == value) {
+                            element.wards.forEach(element1 => {
+                                $('#town').append(`<option value="${element1.code}">${element1.name}</option>`)
+                            });
+                        }
+                    })
+                });
+            }
+            prodvince = JSON.parse(data);
+            apiProvince(prodvince);
+        })
     </script>
 }
