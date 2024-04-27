@@ -1,4 +1,6 @@
 ﻿
+using eProject.Insfrastructure.Services;
+
 namespace eProject.UI.Configuration
 {
     public static class ConfigurationService
@@ -42,6 +44,7 @@ namespace eProject.UI.Configuration
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}");
+                endpoints.MapHub<NotificationHub>("/notificationHub");
             });
         }
     }

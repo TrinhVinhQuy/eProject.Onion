@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using eProject.Application.Abstracts;
-using eProject.Application.DTOs.OrderDetail;
 using eProject.Domain.Abstracts;
 using eProject.Domain.Entities;
 

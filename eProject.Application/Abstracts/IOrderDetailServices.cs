@@ -1,5 +1,4 @@
-﻿using eProject.Application.DTOs.OrderDetail;
-using eProject.Domain.Entities;
+﻿using eProject.Domain.Entities;
 
 namespace eProject.Application.Abstracts
 {

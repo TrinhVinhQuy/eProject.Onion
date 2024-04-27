@@ -8,5 +8,12 @@ namespace eProject.Application.DTOs.Order
 {
     public class OrderDTO
     {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public string Name { get; set; }
+        public bool Status { get; set; }
+        public DateTime CreateOn { get; set; }
+        public bool OrderStatus { get; set; }
+        public string TradingCode { get; set; }
     }
 }

@@ -121,7 +121,8 @@ namespace eProject.UI.Controllers
                         Province = HttpContext.Session.GetString("Province"),
                         District = HttpContext.Session.GetString("District"),
                         Town = HttpContext.Session.GetString("Town"),
-                        Address = HttpContext.Session.GetString("Address")
+                        Address = HttpContext.Session.GetString("Address"),
+                        IsActive = true,
                     };
                     var _orederId = await _orderServices.InsertAsync(_order);
 
@@ -163,6 +164,54 @@ namespace eProject.UI.Controllers
                     ViewBag.ResponseCode = model.vnp_ResponseCode == "99" ? "Có lỗi vui lòng liên hệ với Admin" : null;
                     return View();
                 }
+            }
+            return StatusCode(404);
+        }
+        [HttpPost]
+        public async Task<IActionResult> PayCod(string Province, string District, string Town, string Address)
+        {
+            if (Province == "" || District == "" || Town == "" || Address == "")
+            {
+                return StatusCode(404);
+            }
+            var CartModels = HttpContext.Session.Get<List<CartModel>>("Cart") ?? new List<CartModel>();
+            if (CartModels.Count() > 0)
+            {
+                var _user = await _userServices.GetUserDetailAsync(User.FindFirst(ClaimTypes.Email)?.Value);
+
+                var _order = new Order
+                {
+                    UserId = _user.Id,
+                    CreateOn = DateTime.Now,
+                    Status = true,
+                    OrderStatus = false,
+                    Province = Province,
+                    District = District,
+                    Town = Town,
+                    Address = Address,
+                    InvoiceNumber = "0",
+                    TradingCode = "0",
+                    IsActive = true,
+                };
+                var _orederId = await _orderServices.InsertAsync(_order);
+
+
+                foreach (var item in CartModels)
+                {
+                    var _product = await _productServices.GetByIdAsync(item.Id);
+                    var _orderDetail = new OrderDetail
+                    {
+                        OrderId = _orederId.Id,
+                        ProductId = item.Id,
+                        Price = _product.Price * (100 - _product.Discount) / 100,
+                        Quanlity = item.Quantity,
+                        IsActive = true,
+                    };
+                    await _orderDetailServices.InsertAsync(_orderDetail);
+                }
+                HttpContext.Session.Remove("Cart");
+                await _hubContext.Clients.All.SendAsync("OrderHub");
+                return RedirectToAction("Index", "HistoryOrder");
             }
             return StatusCode(404);
         }

@@ -11,15 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Insfrastructure", "Insfrast
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{9B59118F-B74C-4B3A-9CBB-8DE63A4D7DB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eProject.Application", "eProject.Application\eProject.Application.csproj", "{8AC3E312-B867-4704-BDDB-5B1B67BF14DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eProject.Application", "eProject.Application\eProject.Application.csproj", "{8AC3E312-B867-4704-BDDB-5B1B67BF14DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eProject.Domain", "eProject.Domain\eProject.Domain.csproj", "{9FA156D0-C047-431D-A9A6-AE8C8145F89C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eProject.Domain", "eProject.Domain\eProject.Domain.csproj", "{9FA156D0-C047-431D-A9A6-AE8C8145F89C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eProject.DataAccess", "eProject.DataAccess\eProject.DataAccess.csproj", "{CCD6E8C7-8C27-4577-AB7E-46E603D67523}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eProject.DataAccess", "eProject.DataAccess\eProject.DataAccess.csproj", "{CCD6E8C7-8C27-4577-AB7E-46E603D67523}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eProject.Insfrastructure", "eProject.Insfrastructure\eProject.Insfrastructure.csproj", "{7152318F-B5CC-4CDC-B24A-30CF453ACF28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eProject.Insfrastructure", "eProject.Insfrastructure\eProject.Insfrastructure.csproj", "{7152318F-B5CC-4CDC-B24A-30CF453ACF28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eProject.UI", "eProject.UI\eProject.UI.csproj", "{C6BBB88A-CB6E-4393-9B03-B4A63AA37D85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eProject.UI", "eProject.UI\eProject.UI.csproj", "{C6BBB88A-CB6E-4393-9B03-B4A63AA37D85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,18 +1,4 @@
-﻿function updateCartCount() {
-    $.ajax({
-        url: '/Cart/GetCart',
-        type: 'GET',
-        success: function (data) {
-            document.getElementById("txtCart").innerHTML = data.cartCount;
-            document.getElementById("txtCartRe").innerHTML = data.cartCount;
-            document.getElementById("txtCartPopup").innerHTML = data.cartCount;
-        },
-        error: function (xhr, status, error) {
-            console.error(xhr.responseText);
-        }
-    });
-}
-function showAlertModal(state, message) {
+﻿function showAlertModal(state, message) {
     var modalBody = $('#alertModalBody');
     var alertClass = 'alert-primary'; // Default to primary color
 
