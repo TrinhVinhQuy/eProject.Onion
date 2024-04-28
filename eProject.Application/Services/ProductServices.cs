@@ -58,14 +58,19 @@ namespace eProject.Application.Services
             return _mapper.Map<ProductDTO>(_pro.First(x => x.Id == id));
         }
 
-        public Task<Product> InsertAsync(Product entity)
+        public async Task<Product> GetProductByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _productRepository.GetByIdAsync(id);
         }
 
-        public Task UpdateAsync(Product entity)
+        public async Task<Product> InsertAsync(Product entity)
         {
-            throw new NotImplementedException();
+            return await _productRepository.InsertAsync(entity);
+        }
+
+        public async Task UpdateAsync(Product entity)
+        {
+            await _productRepository.UpdateAsync(entity);
         }
     }
 }

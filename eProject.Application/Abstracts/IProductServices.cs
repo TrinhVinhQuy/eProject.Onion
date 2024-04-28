@@ -8,5 +8,8 @@ namespace eProject.Application.Abstracts
         Task<IEnumerable<ProductDTO>> GetAllAsync();
         Task<IEnumerable<ProductCategoryDTO>> GetByCategoryAsync();
         Task<ProductDTO> GetByIdAsync(int id);
+        Task<Product> GetProductByIdAsync(int id);
+        Task<Product> InsertAsync(Product entity);
+        Task UpdateAsync(Product entity);
     }
 }

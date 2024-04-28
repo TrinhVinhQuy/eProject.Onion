@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace eProject.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class initial_db : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,7 @@ namespace eProject.DataAccess.Migrations
                     MetaDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MetaLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MetaImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -39,7 +39,7 @@ namespace eProject.DataAccess.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,6 +56,7 @@ namespace eProject.DataAccess.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     Discount = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
+                    SoldItem = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MetaTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MetaKeywords = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -63,7 +64,7 @@ namespace eProject.DataAccess.Migrations
                     MetaLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MetaImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -83,16 +84,16 @@ namespace eProject.DataAccess.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Province = table.Column<int>(type: "int", nullable: true),
                     District = table.Column<int>(type: "int", nullable: true),
                     Town = table.Column<int>(type: "int", nullable: true),
                     RoleId = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -113,7 +114,7 @@ namespace eProject.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -143,7 +144,7 @@ namespace eProject.DataAccess.Migrations
                     TradingCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderStatus = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -171,13 +172,36 @@ namespace eProject.DataAccess.Migrations
                     MetaLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MetaImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Posts_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ResetPassword",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResetPassword", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ResetPassword_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -194,7 +218,7 @@ namespace eProject.DataAccess.Migrations
                     Rating = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -223,7 +247,7 @@ namespace eProject.DataAccess.Migrations
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     Quanlity = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -256,8 +280,8 @@ namespace eProject.DataAccess.Migrations
                 columns: new[] { "Id", "Address", "District", "Email", "IsActive", "Name", "Password", "Phone", "Province", "RoleId", "Town", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "451 Tôn Đản", 1, "txvq0101@gmail.com", true, "Trịnh Xuân Vinh Quy", "Quy@0104", "0946453657", 1, 1, 1, "Admin" },
-                    { 2, "451 Tôn Đản", 1, "beobubam1807@gmail.com", true, "Trịnh Xuân Vinh Quy", "Quy@0104", "0946453657", 1, 2, 1, "txvQuy" }
+                    { 1, "451 Tôn Đản", 1, "txvq0101@gmail.com", true, "Trịnh Xuân Vinh Quy", "4D67673CEB2635A08F794606125A7721", "0946453657", 1, 1, 1, "Admin" },
+                    { 2, "451 Tôn Đản", 1, "beobubam1807@gmail.com", true, "Trịnh Xuân Vinh Quy", "4D67673CEB2635A08F794606125A7721", "0946453657", 1, 2, 1, "txvQuy" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -291,6 +315,11 @@ namespace eProject.DataAccess.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ResetPassword_UserId",
+                table: "ResetPassword",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ProductId",
                 table: "Reviews",
                 column: "ProductId");
@@ -317,6 +346,9 @@ namespace eProject.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductImage");
+
+            migrationBuilder.DropTable(
+                name: "ResetPassword");
 
             migrationBuilder.DropTable(
                 name: "Reviews");

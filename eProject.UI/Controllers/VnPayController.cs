@@ -5,6 +5,7 @@ using eProject.Insfrastructure.Services.VnPay;
 using eProject.UI.Models;
 using eProject.UI.Ultility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
@@ -72,7 +73,6 @@ namespace eProject.UI.Controllers
                 var discount = pro.Discount;
                 totalPrice += Convert.ToDouble(price * (100 - discount) * item.Quantity / 100);
             }
-
             OrderInfo order = new OrderInfo
             {
                 OrderId = DateTime.Now.Ticks,
@@ -80,7 +80,7 @@ namespace eProject.UI.Controllers
                 Status = "0",
                 CreatedDate = DateTime.Now
             };
-
+            HttpContext.Session.SetString("vnp_TxnRef", order.OrderId.ToString());
             VnPayLibrary vnpay = new VnPayLibrary();
 
             vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
@@ -100,11 +100,14 @@ namespace eProject.UI.Controllers
             //log.InfoFormat("VNPAY URL: {0}", paymentUrl);
             return Redirect(paymentUrl);
         }
-        [HttpPost]
         public async Task<IActionResult> ConfirmPay([FromQuery] ConfirmVnPayModel model)
         {
             if (ModelState.IsValid)
             {
+                if (HttpContext.Session.GetString("vnp_TxnRef") != model.vnp_TxnRef)
+                {
+                    return StatusCode(404);
+                }
                 if (model.vnp_ResponseCode == "00" && model.vnp_TransactionStatus == "00")
                 {
                     var CartModels = HttpContext.Session.Get<List<CartModel>>("Cart");
@@ -114,15 +117,14 @@ namespace eProject.UI.Controllers
                     {
                         UserId = _user.Id,
                         CreateOn = DateTime.Now,
-                        Status = true,
-                        OrderStatus = false,
+                        Status = false,
+                        OrderStatus = true,
                         InvoiceNumber = model.vnp_TxnRef,
                         TradingCode = model.vnp_TransactionNo,
                         Province = HttpContext.Session.GetString("Province"),
                         District = HttpContext.Session.GetString("District"),
                         Town = HttpContext.Session.GetString("Town"),
                         Address = HttpContext.Session.GetString("Address"),
-                        IsActive = true,
                     };
                     var _orederId = await _orderServices.InsertAsync(_order);
 
@@ -138,13 +140,19 @@ namespace eProject.UI.Controllers
                             Quanlity = item.Quantity,
                         };
                         await _orderDetailServices.InsertAsync(_orderDetail);
+
+                        var product = await _productServices.GetProductByIdAsync(item.Id);
+                        product.Quantity -= item.Quantity;
+                        await _productServices.UpdateAsync(product);
                     }
+
                     ViewBag.ResponseCode = "00";
                     HttpContext.Session.Remove("Province");
                     HttpContext.Session.Remove("District");
                     HttpContext.Session.Remove("Town");
                     HttpContext.Session.Remove("Address");
                     HttpContext.Session.Remove("Cart");
+                    HttpContext.Session.Remove("vnp_TxnRef");
                     await _hubContext.Clients.All.SendAsync("OrderHub");
                     return RedirectToAction("Index", "HistoryOrder");
                 }
@@ -183,7 +191,7 @@ namespace eProject.UI.Controllers
                 {
                     UserId = _user.Id,
                     CreateOn = DateTime.Now,
-                    Status = true,
+                    Status = false,
                     OrderStatus = false,
                     Province = Province,
                     District = District,
@@ -191,7 +199,6 @@ namespace eProject.UI.Controllers
                     Address = Address,
                     InvoiceNumber = "0",
                     TradingCode = "0",
-                    IsActive = true,
                 };
                 var _orederId = await _orderServices.InsertAsync(_order);
 

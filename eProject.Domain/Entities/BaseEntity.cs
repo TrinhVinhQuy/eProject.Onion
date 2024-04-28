@@ -8,7 +8,6 @@ namespace eProject.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
-        [Required]
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
     }
 }

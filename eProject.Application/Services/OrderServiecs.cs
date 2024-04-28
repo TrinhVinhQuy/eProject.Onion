@@ -28,6 +28,11 @@ namespace eProject.Application.Services
             _productDetailRepository = productDetailRepository;
         }
 
+        public Task DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<OrderDTO>> GetAllAsync()
         {
             var _orders = await _orderRepository.GetAllAsync();
@@ -53,6 +58,12 @@ namespace eProject.Application.Services
                 var user = await _userRepository.GetByIdAsync(order.UserId);
                 orderDetail = _mapper.Map(user, orderDetail);
 
+                //if (order.StaffId != null)
+                //{
+                //    var nameStaff = await _userRepository.GetByIdAsync(order.UserId);
+                //    orderDetail.NameStaff = nameStaff.Name;
+                //}
+
                 var _orderDetails = await _orderDetailRepository.GetAllAsync();
                 _orderDetails = _orderDetails.Where(x => x.OrderId == id);
                 var lisrIdProduct = _orderDetails.Select(x => x.ProductId);
@@ -63,7 +74,7 @@ namespace eProject.Application.Services
 
                 foreach (var item in orderDetail.Products)
                 {
-                    item.Quantity = _orderDetails.First(x=>x.ProductId == item.Id).Quanlity;
+                    item.Quantity = _orderDetails.First(x => x.ProductId == item.Id).Quanlity;
                     item.Price = _orderDetails.First(x => x.ProductId == item.Id).Price;
                     item.Discount = 0;
                 }
@@ -73,9 +84,19 @@ namespace eProject.Application.Services
             return null;
         }
 
+        public async Task<Order> GetOrderByIdAsync(int id)
+        {
+            return await _orderRepository.GetByIdAsync(id);
+        }
+
         public async Task<Order> InsertAsync(Order model)
         {
             return await _orderRepository.InsertAsync(model);
+        }
+
+        public async Task UpdateAsync(Order entity)
+        {
+            await _orderRepository.UpdateAsync(entity);
         }
     }
 }

@@ -14,9 +14,10 @@
             <table id="dataTable" class="table table-bordered" width="100%" style="min-width: 700px" cellspacing="0">
                 <thead>
                     <tr>
-                        @* <th>Mã đơn hàng</th> *@
+                        <th>Id</th>
                         <th>Tên khách hàng</th>
-                        <th>Thanh toán</th>
+                        <th>Thời gian</th>
+                        <th>Thanh toán / Phương thức</th>
                         <th>Trạng thái</th>
                         <th>#</th>
                     </tr>
@@ -86,7 +87,6 @@
 </div>
 
 
-
 @section Scripts {
     <!-- Data địa chỉ -->
     <script src="~/assets/js/data.json"></script>
@@ -95,6 +95,7 @@
     <!-- DataTables JS -->
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#dataTable').DataTable({
@@ -103,10 +104,43 @@
                     "dataSrc": ""
                 },
                 "columns": [
-                    // { "data": "id" },
+                    { "data": "id" },
                     { "data": "name" },
-                    { "data": "orderStatus" },
-                    { "data": "status" },
+                    {
+                        "data": "createOn",
+                        "render": function (data, type, row) {
+                            return moment(data).format('DD/MM/YYYY HH:mm:ss'); // Định dạng thời gian theo định dạng mong muốn
+                        }
+                    },
+                    {
+                        "data": "orderStatus",
+                        "render": function (data, type, row) {
+                            if (data === false) {
+                                return "Chưa " + "/ cod";
+                            } else {
+                                return "Rồi " + (row.tradingCode == 0 ? "/ cod" : "/ vnpay");
+                            }
+                        }
+                    },
+                    {
+                        "data": "status",
+                        "render": function (data, type, row) {
+                            if (data === false) {
+                                return '<a href="javascript:void(0)" class="m-0 font-weight-bold text-primary" onclick="Delivery(' + row.id + ')">Lên đơn</a>';
+                            }
+                            if (data == true && row.isActive == null) {
+                                var code = row.tradingCode == 0 ? 0 : 1;
+                                return '<a href="javascript:void(0)" style="margin-right: 10px" class="font-weight-bold text-primary" onclick="DeliveryStatus(' + row.id + ',1,' + code + ')">Giao thành công</a> <span>/</span>' +
+                                    '<a href="javascript:void(0)" style="margin-left: 10px" class="font-weight-bold text-primary" onclick="DeliveryStatus(' + row.id + ',0,' + code + ')">Giao thất bại</a>';
+                            }
+                            if (data == true && row.isActive == false) {
+                                return '<span class="text-danger">Giao hàng thất bại!</span>';
+                            }
+                            if (data == true && row.isActive == true) {
+                                return '<span style="color:#208b65">Giao hàng thành công!</span>';
+                            }
+                        }
+                    },
                     {
                         "data": null,
                         "render": function (data, type, row) {
@@ -114,7 +148,10 @@
                         }
                     }
                 ],
-                "lengthMenu": [5, 10, 25, 50],
+                "order": [
+                    [2, 'desc'] // Sắp xếp cột đầu tiên (cột ID) theo thứ tự giảm dần
+                ],
+                "lengthMenu": [25, 50],
                 "language": {
                     processing: "Message khi đang tải dữ liệu",
                     search: "Tìm kiếm",
@@ -247,5 +284,57 @@
             // Nếu kết nối bị đóng, thực hiện tái kết nối sau một khoảng thời gian
             setTimeout(startConnection, 5000); // Ví dụ: kết nối lại sau 5 giây
         });
+    </script>
+    <script>
+        function Delivery(Id) {
+            // Hiển thị hộp thoại xác nhận trước khi gửi yêu cầu
+            var confirmation = confirm("Bạn có chắc chắn đơn hàng này đã được đóng gói?");
+            if (confirmation) {
+                var formData = new FormData();
+                formData.append('Id', Id);
+                $.ajax({
+                    url: '/admin/json-order-delivery',
+                    type: 'Post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            $('#dataTable').DataTable().ajax.reload();
+                            showAlertModal('success', response.message);
+                        }
+                    },
+                    error: function () {
+                        showAlertModal('danger', 'Có lỗi xảy ra khi gửi yêu cầu!');
+                    }
+                });
+            }
+        }
+        function DeliveryStatus(Id, Status, Code) {
+            // Hiển thị hộp thoại xác nhận trước khi gửi yêu cầu
+            var confirmation = confirm("Bạn có chắc chắn muốn cập nhật tình trạng đơn hàng không?");
+            if (confirmation) {
+                var formData = new FormData();
+                formData.append('Id', Id);
+                formData.append('Status', Status);
+                formData.append('Code', Code);
+                $.ajax({
+                    url: '/admin/json-order-deliverystatus',
+                    type: 'Post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            $('#dataTable').DataTable().ajax.reload();
+                            showAlertModal('success', response.message);
+                        }
+                    },
+                    error: function () {
+                        showAlertModal('danger', 'Có lỗi xảy ra khi gửi yêu cầu!');
+                    }
+                });
+            }
+        }
     </script>
 }

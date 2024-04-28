@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using eProject.Application.DTOs.Category;
 using eProject.Application.DTOs.Order;
+using eProject.Application.DTOs.OrderDetail;
 using eProject.Application.DTOs.Product;
 using eProject.Application.DTOs.ResetPassword;
 using eProject.Application.DTOs.Role;
@@ -29,10 +30,17 @@ namespace eProject.Application.Configuration
             CreateMap<User, UserLoginDTO>().ReverseMap();
             CreateMap<User, UserDetailDTO>().ReverseMap();
 
-            CreateMap<Order, OrderDTO>().ReverseMap();
+            CreateMap<Order, OrderDTO>().ReverseMap()
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive));
             CreateMap<Order, OrderDetailDTO>().ReverseMap();
             CreateMap<User, OrderDetailDTO>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore());
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Province, opt => opt.Ignore())
+                .ForMember(dest => dest.District, opt => opt.Ignore())
+                .ForMember(dest => dest.Town, opt => opt.Ignore())
+                .ForMember(dest => dest.Address, opt => opt.Ignore());
+
+            CreateMap<OrderDetail, OrderDetailByOrderIdDTO>().ReverseMap();
 
             CreateMap<ResetPassword, ResetPasswordDTO>().ReverseMap();
         }

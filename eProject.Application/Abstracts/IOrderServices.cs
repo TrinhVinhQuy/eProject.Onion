@@ -8,5 +8,8 @@ namespace eProject.Application.Abstracts
         Task<Order> InsertAsync(Order model);
         Task<IEnumerable<OrderDTO>> GetAllAsync();
         Task<OrderDetailDTO> GetByIdAsync(int id);
+        Task UpdateAsync(Order entity);
+        Task DeleteAsync(int id);
+        Task<Order> GetOrderByIdAsync(int id);
     }
 }

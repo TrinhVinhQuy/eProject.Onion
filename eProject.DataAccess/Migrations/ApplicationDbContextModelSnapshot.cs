@@ -30,7 +30,7 @@ namespace eProject.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("MetaDescription")
@@ -85,7 +85,7 @@ namespace eProject.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("OrderStatus")
@@ -127,7 +127,7 @@ namespace eProject.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<int>("OrderId")
@@ -167,7 +167,7 @@ namespace eProject.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("MetaDescription")
@@ -222,7 +222,7 @@ namespace eProject.DataAccess.Migrations
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18, 0)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("MetaDescription")
@@ -277,7 +277,7 @@ namespace eProject.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<int>("ProductId")
@@ -304,7 +304,7 @@ namespace eProject.DataAccess.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("Password")
@@ -332,7 +332,7 @@ namespace eProject.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<int>("ProductId")
@@ -361,7 +361,7 @@ namespace eProject.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -405,7 +405,7 @@ namespace eProject.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -445,7 +445,7 @@ namespace eProject.DataAccess.Migrations
                             Email = "txvq0101@gmail.com",
                             IsActive = true,
                             Name = "Trịnh Xuân Vinh Quy",
-                            Password = "Quy@0104",
+                            Password = "4D67673CEB2635A08F794606125A7721",
                             Phone = "0946453657",
                             Province = 1,
                             RoleId = 1,
@@ -460,7 +460,7 @@ namespace eProject.DataAccess.Migrations
                             Email = "beobubam1807@gmail.com",
                             IsActive = true,
                             Name = "Trịnh Xuân Vinh Quy",
-                            Password = "Quy@0104",
+                            Password = "4D67673CEB2635A08F794606125A7721",
                             Phone = "0946453657",
                             Province = 1,
                             RoleId = 2,
