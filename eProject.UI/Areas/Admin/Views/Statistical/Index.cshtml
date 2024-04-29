@@ -1,0 +1,347 @@
+﻿@{
+    ViewData["Title"] = "Báo cáo đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    // Lấy ngày hiện tại
+    var today = DateTime.Today.ToString("yyyy-MM-dd");
+    var motnh = DateTime.Now.Month;
+}
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex align-items-center">
+        <p href="javascript:void(0)" class="m-0 font-weight-bold text-primary">Báo cáo đơn hàng theo ngày</p>
+        <input class="form form-control" style="margin-left: 10px; width:max-content" type="date" id="txtDate" value="@today" />
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-bordered" width="100%" style="min-width: 700px" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Tên khách hàng</th>
+                        <th>Thời gian</th>
+                        <th>Thanh toán / Phương thức</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModalUpdate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Thông tin chi tiết đơn hàng</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div>
+                    <label for="txtId">Mã đơn: <span id="txtId"></span></label>
+                </div>
+                <div>
+                    <label for="txtProvince">Tỉnh / Thành phố: <span id="txtProvince"></span></label>
+                </div>
+                <div>
+                    <label for="txtDistrict">Quận / Huyện: <span id="txtDistrict"></span></label>
+                </div>
+                <div>
+                    <label for="txtTown">Phường / Xã: <span id="txtTown"></span></label>
+                </div>
+                <div>
+                    <label for="txtAddress">Địa chỉ/ Số nhà: <span id="txtAddress"></span></label>
+                </div>
+                <div>
+                    <label for="descriptionUpdate">Sản phẩm</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" style="min-width:600px">
+                            <thead>
+                                <tr>
+                                    <th>Hình ảnh</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Số lượng</th>
+                                    <th>Đơn giá</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderDetailsBody">
+                                <!-- Order details will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex align-items-center">
+        <div href="javascript:void(0)" style="width: 100%" class="m-0 font-weight-bold text-primary d-flex align-items-center">
+            <span style="width: max-content"> Báo cáo đơn hàng theo</span>
+            <select id="month" style="width: max-content; margin: 0px 10px" class="form form-control" name="month">
+                <option value="">Chọn tháng</option>
+                <option value="1">Tháng 1</option>
+                <option value="2">Tháng 2</option>
+                <option value="3">Tháng 3</option>
+                <option value="4">Tháng 4</option>
+                <option value="5">Tháng 5</option>
+                <option value="6">Tháng 6</option>
+                <option value="7">Tháng 7</option>
+                <option value="8">Tháng 8</option>
+                <option value="9">Tháng 9</option>
+                <option value="10">Tháng 10</option>
+                <option value="11">Tháng 11</option>
+                <option value="12">Tháng 12</option>
+            </select>
+            <span style="width: max-content">trong năm 2024</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="dataTableMonth" class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Tên khách hàng</th>
+                        <th>Thời gian</th>
+                        <th>Thanh toán / Phương thức</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <!-- DataTables JS -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                "lengthMenu": [5, 10, 25, 50],
+                "language": {
+                    processing: "Message khi đang tải dữ liệu",
+                    search: "Tìm kiếm",
+                    lengthMenu: "Điều chỉnh số mục trên 1 trang _MENU_ ",
+                    info: "Hiển thị _START_ đến _END_ trong  _TOTAL_ mục",
+                    infoEmpty: "Không có dữ liệu, Hiển thị 0 bản ghi trong _MAX_ tổng cộng 0 ",
+                    infoFiltered: "(Không có sản phẩm trong _MAX_ bản ghi)",
+                    loadingRecords: "",
+                    zeroRecords: "Không có dữ liệu theo tìm kiếm",
+                    emptyTable: "Không có dữ liệu",
+                    paginate: {
+                        first: "<<",
+                        previous: "<",
+                        next: ">",
+                        last: ">>"
+                    },
+                    aria: {
+                        sortAscending: ": Message khi đang sắp xếp theo column",
+                        sortDescending: ": Message khi đang sắp xếp theo column",
+                    }
+                },
+                "columnDefs": [
+                    { "width": "150px", "targets": [3, 4] },  // Chiều rộng 5% cho các cột cuối cùng
+                ],
+            });
+            $('#dataTableMonth').DataTable({
+                "lengthMenu": [5, 10, 25, 50],
+                "language": {
+                    processing: "Message khi đang tải dữ liệu",
+                    search: "Tìm kiếm",
+                    lengthMenu: "Điều chỉnh số mục trên 1 trang _MENU_ ",
+                    info: "Hiển thị _START_ đến _END_ trong  _TOTAL_ mục",
+                    infoEmpty: "Không có dữ liệu, Hiển thị 0 bản ghi trong _MAX_ tổng cộng 0 ",
+                    infoFiltered: "(Không có sản phẩm trong _MAX_ bản ghi)",
+                    loadingRecords: "",
+                    zeroRecords: "Không có dữ liệu theo tìm kiếm",
+                    emptyTable: "Không có dữ liệu",
+                    paginate: {
+                        first: "<<",
+                        previous: "<",
+                        next: ">",
+                        last: ">>"
+                    },
+                    aria: {
+                        sortAscending: ": Message khi đang sắp xếp theo column",
+                        sortDescending: ": Message khi đang sắp xếp theo column",
+                    }
+                },
+                "columnDefs": [
+                    { "width": "150px", "targets": [3, 4] },  // Chiều rộng 5% cho các cột cuối cùng
+                ],
+            });
+        });
+        $(document).ready(function () {
+            // Hàm xử lý sự kiện khi thay đổi giá trị của ô nhập liệu ngày tháng
+            $('#txtDate').change(function () {
+                // Lấy giá trị ngày tháng mới từ ô nhập liệu
+                var selectedDate = $(this).val();
+                // Gọi hàm để tải lại dữ liệu AJAX với giá trị ngày tháng mới
+                loadData(selectedDate);
+            });
+
+            // Hàm tải lại dữ liệu AJAX
+            function loadData(selectedDate) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin/statistical-day',
+                    data: { dateTime: selectedDate },
+                    success: function (response) {
+                        $('#dataTable').DataTable().clear().draw();
+                        if (response != null) {
+                            //Thêm dữ liệu mới vào bảng
+                            response.forEach(function (item) {
+                                // Định dạng ngày tháng theo giờ Việt Nam
+                                var formattedDate = moment(item.createOn).format('DD/MM/YYYY HH:mm');
+
+                                var paymentMethod = item.tradingCode == 0 ? "cod" : "vnpay"
+
+                                // Thêm dữ liệu vào bảng
+                                $('#dataTable').DataTable().row.add([
+                                    item.id,
+                                    item.name,
+                                    formattedDate,
+                                    paymentMethod,
+                                    '<a href="#" class="m-0 font-weight-bold text-primary" onclick=OrderDetail(' + item.id + ')>Chi tiết</a>'
+                                ]).draw(false);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+            // Gọi hàm tải lại dữ liệu khi trang được tải
+            loadData($('#txtDate').val());
+        });
+        $('#month').change(function () {
+            var selectedValue = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: '/admin/statistical-month?month=' + selectedValue,
+                // data: { dateTime: selectedDate },
+                success: function (response) {
+                    $('#dataTableMonth').DataTable().clear().draw();
+                    if (response != null) {
+                        //Thêm dữ liệu mới vào bảng
+                        response.forEach(function (item) {
+                            // Định dạng ngày tháng theo giờ Việt Nam
+                            var formattedDate = moment(item.createOn).format('DD/MM/YYYY HH:mm');
+
+                            var paymentMethod = item.tradingCode == 0 ? "cod" : "vnpay"
+
+                            // Thêm dữ liệu vào bảng
+                            $('#dataTableMonth').DataTable().row.add([
+                                item.id,
+                                item.name,
+                                formattedDate,
+                                paymentMethod,
+                                '<a href="#" class="m-0 font-weight-bold text-primary" onclick=OrderDetail(' + item.id + ')>Chi tiết</a>'
+                            ]).draw(false);
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    </script>
+    <script src="~/assets/js/data.json"></script>
+    <script>
+        var listprodvince = JSON.parse(data);
+        function getProvinceName(provinceCode) {
+            // Tìm tên của tỉnh/thành phố từ mã tỉnh/thành phố
+            var index = listprodvince.findIndex(function (item) {
+                return item.code == provinceCode;
+            });
+            return (index !== -1) ? listprodvince[index].name : '';
+        }
+        function getDistrictName(provinceCode, districtCode) {
+            var provinceIndex = listprodvince.findIndex(function (item) {
+                return item.code == provinceCode;
+            });
+            if (provinceIndex !== -1) {
+                var districtIndex = listprodvince[provinceIndex].districts.findIndex(function (item) {
+                    return item.code == districtCode;
+                });
+                return (districtIndex !== -1) ? listprodvince[provinceIndex].districts[districtIndex].name : '';
+            }
+            return '';
+        }
+
+        function getTownName(provinceCode, districtCode, townCode) {
+            var provinceIndex = listprodvince.findIndex(function (item) {
+                return item.code == provinceCode;
+            });
+            if (provinceIndex !== -1) {
+                var districtIndex = listprodvince[provinceIndex].districts.findIndex(function (item) {
+                    return item.code == districtCode;
+                });
+                if (districtIndex !== -1) {
+                    var townIndex = listprodvince[provinceIndex].districts[districtIndex].wards.findIndex(function (item) {
+                        return item.code == townCode;
+                    });
+                    return (townIndex !== -1) ? listprodvince[provinceIndex].districts[districtIndex].wards[townIndex].name : '';
+                }
+            }
+            return '';
+        }
+        function OrderDetail(Id) {
+            $.ajax({
+                url: '/admin/json-order-detail/' + Id,
+                type: 'get', // Sửa type từ 'post' thành 'get'
+                success: function (response) {
+                    console.log(response)
+                    // Đưa dữ liệu vào modal
+                    $('#txtId').text(response.id);
+                    var provinceName = getProvinceName(response.province);
+                    $('#txtProvince').text(provinceName);
+                    var districtName = getDistrictName(response.province, response.district)
+                    $('#txtDistrict').text(districtName);
+                    var townName = getTownName(response.province, response.district, response.town)
+                    $('#txtTown').text(townName);
+                    $('#txtAddress').text(response.address);
+
+                    // Xử lý dữ liệu sản phẩm
+                    var products = response.products;
+                    var tableBody = $('#orderDetailsBody');
+                    tableBody.empty(); // Xóa nội dung cũ trong bảng
+
+                    $.each(products, function (index, product) {
+                        var row = '<tr>' +
+                            '<td><img src="' + product.metaImage + '" alt="' + product.name + '" style="max-width: 100px;"></td>' +
+                            '<td>' + product.name + '</td>' +
+                            '<td>' + product.quantity + '</td>' +
+                            '<td>' + product.price + '</td>' +
+                            '</tr>';
+                        tableBody.append(row); // Thêm hàng mới vào bảng
+                    });
+                    $('#myModalUpdate').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    // Xử lý lỗi nếu cần
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    </script>
+}

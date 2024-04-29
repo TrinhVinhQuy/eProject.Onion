@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewData["Title"] = "Thống kê sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <p class="m-0 font-weight-bold text-primary">Thống kê sản phẩm</p>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-bordered" style="width:100%; min-width: 1000px;" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã sản phẩm </th>
+                        <th>Tên </th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Giá giảm</th>
+                        <th>Số lượng đã bán</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $('#dataTable').DataTable({
+            "ajax": {
+                "url": "/admin/top-product",
+                "type": "get",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "id" },
+                { "data": "name",},
+                {
+                    "data": "metaImage",
+                    "render": function (data, type, row) {
+                        return '<img src="' + data + '" alt="Product Image" width="100">';
+                    }
+                },
+                { "data": "price" },
+                { "data": "discount" },
+                { "data": "soldItem" },
+            ],
+            "order": [
+                [5, 'desc'] // Sắp xếp cột đầu tiên (cột ID) theo thứ tự giảm dần
+            ],
+            "lengthMenu": [5, 10, 25, 50],
+            "language": {
+                processing: "Message khi đang tải dữ liệu",
+                search: "Tìm kiếm",
+                lengthMenu: "Điều chỉnh số mục trên 1 trang _MENU_ ",
+                info: "Hiển thị _START_ đến _END_ trong  _TOTAL_ mục",
+                infoEmpty: "Không có dữ liệu, Hiển thị 0 bản ghi trong _MAX_ tổng cộng 0 ",
+                infoFiltered: "(Không có sản phẩm trong _MAX_ bản ghi)",
+                loadingRecords: "",
+                zeroRecords: "Không có dữ liệu theo tìm kiếm",
+                emptyTable: "Không có dữ liệu",
+                paginate: {
+                    first: "<<",
+                    previous: "<",
+                    next: ">",
+                    last: ">>"
+                },
+                aria: {
+                    sortAscending: ": Message khi đang sắp xếp theo column",
+                    sortDescending: ": Message khi đang sắp xếp theo column",
+                }
+            },
+            "processing": true,
+            "serverSide": false,
+        });
+    </script>
+}
