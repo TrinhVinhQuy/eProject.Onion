@@ -10,20 +10,24 @@ The goal of this project is implement the most common used technologies and shar
 
 To know more about how to setup your enviroment visit the [Microsoft .NET Download Guide](https://www.microsoft.com/net/download)
 
+## Demo: [https://coffeeshopon.somee.com](https://coffeeshopon.somee.com)
+
+## Account Admin: 
+- user: Admin
+- pass: Admin@123
+
 ## Technologies implemented:
 
 - ASP.NET 7.0
-- Entity Framework Core 7.0
+- Entity Framework Core 7.0, Linq
 - AutoMapper
 - HTML, CSS, SCSS
-- Javascript, jQuery, Datatable.net, Ckeditor
+- Javascript, jQuery
 - Authentication
 - Google Cloud (OAuth 2.0)
-
-## Architecture:
-
+- Dapper
 - Onion
-- Repository
+- Repository, Unit of work
   
 ## About:
 The eProject.Onion Project was developed by [Trịnh Xuân Vinh Quy](https://www.facebook.com/Vhquy).
