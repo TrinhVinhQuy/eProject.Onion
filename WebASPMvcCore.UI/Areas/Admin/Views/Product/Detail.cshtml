@@ -1,0 +1,195 @@
+﻿@{
+    ViewData["Title"] = "Sản phẩm chi tiết";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <style>
+        #drop-area {
+            width: max-content;
+            border: 2px dashed #ccc;
+            padding: 20px;
+            transition: border 0.3s ease;
+        }
+
+            #drop-area.hover {
+                border-color: #007bff; /* Màu sắc khi hover */
+            }
+
+        #gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: left;
+        }
+
+        .obj-item {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin: 10px;
+        }
+    </style>
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <p class="m-0 font-weight-bold text-primary">Tạo sản phẩm</p>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="form-group col-lg-4">
+                <label for="txtModalName">Tên sản phẩm *</label>
+                <input type="text" class="form-control" id="txtModalName" placeholder="Tên sản phẩm" />
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="txtModalPrice">Đơn giá *</label>
+                <input type="number" class="form-control" id="txtModalPrice" placeholder="Đơn giá" />
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="txtModalDiscountPrice">Giảm giá nếu có</label>
+                <input type="number" class="form-control" id="txtModalDiscountPrice" placeholder="Giá sau giảm" />
+            </div>
+            <div class="form-group col-lg-12">
+                <label for="txtModalDescription">Mô tả *</label>
+                <div id="editor" class="ml-10 form form-control"></div>
+            </div>
+            <div class="form-group col-lg-12">
+                <label for="txtModalDescriptionShort">Mô tả ngắn *</label>
+                <input type="text" class="form-control" id="txtModalDescriptionShort" placeholder="Mô tả ngắn" />
+            </div>
+            <div class="form-group col-lg-12">
+                <label for="txtModalKeywords">Từ khoá *</label>
+                <input type="text" class="form-control" id="txtModalKeywords" placeholder="Từ khoá" />
+            </div>
+            <div class="form-group col-lg-6">
+                <label for="txtModalCategory">Danh mục</label>
+                <select class="form-control" id="txtModalCategory">
+                    @foreach (var category in ViewBag.Category)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="txtModalQuantity">Số lượng *</label>
+                <input type="number" class="form-control" id="txtModalQuantity" placeholder="Số lượng" />
+            </div>
+            <div class="form-group col-lg-4">
+                <a href="javascript:void(0)" onclick="Save()" class="btn btn-primary">Lưu</a>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/ckeditor5-classic-free-full-feature@35.4.1/build/ckeditor.min.js"></script>
+    <script>
+        let editor;
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                plugins: ['Essentials',
+                    'Paragraph',
+                    'Heading',
+                    'Bold',
+                    'Italic',
+                    'Underline',
+                    'Strikethrough',
+                    'SourceEditing',
+                    'Subscript',
+                    'Superscript',
+                    'Alignment',
+                    'Indent',
+                    'IndentBlock',
+                    'BlockQuote',
+                    'Link',
+                    'Image',
+                    'ImageCaption',
+                    'ImageStyle',
+                    'ImageToolbar',
+                    'ImageUpload',
+                    'List',
+                    'MediaEmbed',
+                    'PasteFromOffice',
+                    'Table',
+                    'TableToolbar',
+                    'TableProperties',
+                    'TableCellProperties',
+                    'Highlight',
+                    'FontFamily',
+                    'FontSize',
+                    'FontColor',
+                    'FontBackgroundColor', 'GeneralHtmlSupport', /* ... */]
+            })
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    <script>
+        function Load() {
+            $.ajax({
+                url: "/admin/product-get-id?Id=@ViewBag.Id",
+                method: "GET",
+                success: function (response) {
+                    if (response.success) {
+                        // Get the product data
+                        var product = response.result;
+                        console.log(product);
+                        // Fill the form fields with the product data
+                        $('#txtModalName').val(product.name);
+                        $('#txtModalPrice').val(product.price);
+                        $('#txtModalDiscountPrice').val(product.discount);
+                        $('#txtModalQuantity').val(product.quantity);
+                        editor.setData(product.description);
+                        $('#txtModalDescriptionShort').val(product.metaDescription);
+                        $('#txtModalKeywords').val(product.metaKeywords);
+                        $('#txtModalCategory').val(product.categoryId);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors if any
+                    alert("An error occurred: " + error);
+                }
+            });
+        }
+        $(document).ready(function () {
+            Load();
+        });
+        function Save() {
+            var discount = $("#txtModalDiscountPrice").val().trim();
+
+            // Check if Discount is between 0 and 100
+            if (discount < 0 || discount > 100) {
+                alert("Giảm giá phải nằm trong khoảng từ 0 đến 100.");
+                return; // Exit the function to prevent the form submission
+            }
+            var formData = new FormData();
+
+            formData.append("Id", "@ViewBag.Id",);
+            formData.append("Name", $("#txtModalName").val().trim());
+            formData.append("Price", $("#txtModalPrice").val().trim());
+            formData.append("Discount", $("#txtModalDiscountPrice").val().trim());
+            formData.append("Description", editor.getData());
+            formData.append("MetaDescription", $("#txtModalDescriptionShort").val().trim());
+            formData.append("MetaKeywords", $("#txtModalKeywords").val().trim());
+            formData.append("CategoryId", $("#txtModalCategory").val().trim());
+            formData.append("Quantity", $("#txtModalQuantity").val().trim());
+            formData.append("MetaLink", $("#txtModalName").val().trim());
+
+            // Send AJAX request
+            $.ajax({
+                url: '/admin/product/detail', // Update with your actual URL
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    Load();
+                    alert('Sản phẩm đã được tạo thành công!');
+                },
+                error: function (xhr, status, error) {
+                    alert('Đã xảy ra lỗi: ' + error);
+                }
+            });
+        }
+    </script>
+}

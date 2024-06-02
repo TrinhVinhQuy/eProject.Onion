@@ -1,0 +1,12 @@
+﻿@model IEnumerable<WebASPMvcCore.Application.DTOs.Category.CategoryDTO>
+
+<a href="#0">Danh mục</a>
+<ul class="sub-menu">
+    <li><a href="/tat-ca-san-pham.html">Tất cả sản phẩm</a></li>
+    @{
+        foreach (var item in Model)
+        {
+            <li><a href="/danh-muc/@item.MetaLink">@item.Name</a></li>
+        }
+    }
+</ul>

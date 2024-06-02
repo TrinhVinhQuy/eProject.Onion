@@ -1,0 +1,57 @@
+﻿@model WebASPMvcCore.UI.Models.LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<br />
+
+<div class="m-auto" style="width: 375px">
+    <div class="row">
+        <div class="card">
+            <form asp-controller="Login" asp-action="Index" method="post" asp-antiforgery="true">
+                <div class="card-body">
+                    <h3 class="text-center">Đăng nhập</h3>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <input type="hidden" asp-for="ReturnUrl"/>
+                    <input type="hidden" asp-for="Captcha" />
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control" asp-for="Username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
+                        <input type="password" class="form-control" asp-for="Password">
+                    </div>
+                    <center>
+                        <div id="recaptcha"></div>
+                        <button type="submit" class="btn btn-primary mt-2">Đăng nhập</button>
+                    </center>
+                    <hr />
+                    <div class="mb-3 d-flex justify-content-between">
+                        <a href="/login/external?provider=Google" class="btn btn-danger">Google</a>
+                        <a href="/login/external?provider=Facebook" class="btn btn-primary">Facebook</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+@section Scripts {
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+    <script src="~/js/components/login.js"></script>
+    <script>
+        var onloadCallback = function () {
+            grecaptcha.render('recaptcha', {
+                'sitekey': '6LfijO4pAAAAAAzavbWU2SyofdtzWu6dpu0JFafE',
+                'callback': function (response) {
+                    document.getElementById('Captcha').value = response;
+                }
+            });
+        };
+    </script>
+}

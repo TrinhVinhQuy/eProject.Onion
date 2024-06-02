@@ -1,0 +1,21 @@
+﻿@model WebASPMvcCore.Application.DTOs.ViewModels.ExternalLoginModel
+
+<br />
+<br />
+<div class="m-auto" style="width: 375px">
+    <p id="external-login-description" class="text-justify">
+        Bạn đã xác thực thành công với <strong>@Model.Provider</strong>. Vui lòng nhập địa chỉ email cho trang web này bên dưới và nhấp vào nút Đăng ký để hoàn tất đăng nhập.
+    </p>
+
+    <div class="w-100">
+        <form asp-action="ConfirmationExternal" asp-asp-controller="Login" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <br />
+            <input type="text" asp-for="Email" class="form-control mb-2" />
+            <center>
+                <button type="submit" class="btn btn-primary">Đăng kí</button>
+            </center>
+        </form>
+    </div>
+</div>
+<br />

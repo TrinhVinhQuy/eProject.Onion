@@ -1,0 +1,334 @@
+﻿﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model WebASPMvcCore.Application.DTOs.Product.ProductDetailDTO
+<main>
+    <!-- breadcrumb area start -->
+    <section class="breadcrumb-area pt-140 pb-140 bg_img" data-overlay="dark" data-opacity="5" data-background="../assets/images/bg/testimonial-bg-2.jpg">
+        <div class="shape shape__1"><img src="~/assets/images/shape/breadcrumb-shape-1.png" alt=""></div>
+        <div class="shape shape__2"><img src="~/assets/images/shape/breadcrumb-shape-2.png" alt=""></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12 text-center">
+                    <h2 class="page-title">Cửa hàng Cafena</h2>
+                    <div class="cafena-breadcrumb breadcrumbs">
+                        <ul class="list-unstyled d-flex align-items-center justify-content-center">
+                            <li class="cafenabcrumb-item duxinbcrumb-begin">
+                                <a asp-controller="Home" asp-action="Index"><span>Trang chủ</span></a>
+                            </li>
+                            <li class="cafenabcrumb-item duxinbcrumb-begin">
+                                <a href="/danh-muc/@ViewBag.CategoryLink"><span>@ViewBag.CategoryName</span></a>
+                            </li>
+                            <li class="cafenabcrumb-item duxinbcrumb-end">
+                                <h1 style="color: #C7A17A; font-size: 15px; font-weight: 600;">@Model.Name</h1>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="shop"></div>
+        </div>
+    </section>
+    <!-- breadcrumb area end -->
+    <!-- product details area start -->
+    <div class="product-details__area pt-120 pb-110">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="product-details__wrapper">
+                        <div class="pd-img">
+                            <div class="tab-content" id="pdContent">
+                                <div class="tab-pane fade show active" id="pd-1" role="tabpanel" aria-labelledby="pd-1-tab">
+                                    <div class="big-img">
+                                        <img src="@Model.MetaImage" alt="">
+                                    </div>
+                                </div>
+                                @{
+                                    for (var i = 2; i <= Model.Images.Count(); i++)
+                                    {
+                                        <div class="tab-pane fade" id="pd-@i" role="tabpanel" aria-labelledby="pd-@i-tab">
+                                            <div class="big-img">
+                                                <img src="@Model.Images[i-1]" alt="@Model.MetaTitle">
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="pd-tab">
+                            <nav>
+                                <div class="nav" id="shop-filter-tab" role="tablist">
+                                    <a class="nav-link active" id="pd-1-tab" data-bs-toggle="tab" href="#pd-1" role="tab" aria-controls="pd-1" aria-selected="true">
+                                        <img src="@Model.MetaImage" alt="@Model.MetaTitle">
+                                    </a>
+                                    @{
+                                        for (var i = 2; i <= Model.Images.Count(); i++)
+                                        {
+                                            <a class="nav-link" id="pd-@i-tab" data-bs-toggle="tab" href="#pd-@i" role="tab" aria-controls="pd-@i" aria-selected="true">
+                                                <img src="@Model.Images[i-1]" alt="@Model.MetaTitle">
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="product-details__content">
+                        <div class="tr-wrapper d-flex align-items-center justify-content-between">
+                            <div class="title">@Model.Name</div>
+                        </div>
+                        <div class="rating-wrapper d-flex align-items-center mb-1">
+                            <div class="rattings d-flex align-items-center">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fal fa-star"></i>
+                            </div>
+                            <span class="rt-number">04 - Customar Review</span>
+                        </div>
+                        <h3 style="font-size: 15px; text-align: justify;" class="text-">@Model.MetaDescription</h3>
+                        @{
+                            if (Model.Quantity > 0)
+                            {
+                                <span class="in-stock">
+                                    <i class="fal fa-check"></i> Còn @Model.Quantity sản phẩm trong kho
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="in-stock text-danger">
+                                    <i class="fal fa-times text-dark"></i> Hiện tại sản phẩm đang hết hàng
+                                </span>
+                            }
+                        }
+                        <div class="pp__price">
+                            @{
+                                if (Model.Discount > 0)
+                                {
+                                    <span class="price" style="font-weight: 700; font-size: 18px;"> @Convert.ToInt32(Model.Price - Model.Price * Model.Discount / 100).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")  / <span class="regular"><del>@Convert.ToInt32(Model.Price).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")</del></span></span>
+                                    <span class="price ml-5 text-danger" style="font-size: 15px; font-weight:700">-@Model.Discount%</span>
+                                }
+                                else
+                                {
+                                    <span class="price" style="font-weight: 700;font-size: 18px;"> @Convert.ToInt32(Model.Price - Model.Price * Model.Discount / 100).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")</span>
+                                }
+                            }
+                        </div>
+                        @if (Model.Quantity > 0)
+                        {
+                            <div class="product-quantity d-flex align-items-center">
+                                <span>Số lượng</span>
+                                <input type="number" id="txtNumber" value="1" min="1" max="@Model.Quantity">
+                                <a class="site-btn" id="addCart" data-product="@Model.Id" href="javascript:void(0)">Thêm giỏ hàng</a>
+                            </div>
+                        }
+                        <div class="pd-social-wrapper">
+                            <span class="share"><i class="fas fa-share"></i> Share</span>
+                            <div class="social-links d-flex align-items-center">
+                                <a href="#0" target="_blank"><i class="fab fa-twitter"></i></a>
+                                <a href="#0" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#0" target="_blank"><i class="fab fa-youtube"></i></a>
+                                <a href="#0" target="_blank"><i class="fab fa-google-plus-g"></i></a>
+                                <a href="#0" target="_blank"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- product details area end -->
+    <!-- product info start -->
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="pinfo-tab">
+                    <nav>
+                        <div class="nav d-flex align-items-center justify-content-center" id="pinfo-tab" role="tablist">
+                            <a class="nav-link active" id="pinfo-1-tab" data-bs-toggle="tab" href="#pinfo-1" role="tab" aria-controls="pinfo-1" aria-selected="true">
+                                Chi tiết sản phẩm
+                            </a>
+                            @* <a class="nav-link" id="pinfo-2-tab" data-bs-toggle="tab" href="#pinfo-2" role="tab" aria-controls="pinfo-2" aria-selected="true">
+                                additional imformation
+                            </a>
+                            <a class="nav-link" id="pinfo-3-tab" data-bs-toggle="tab" href="#pinfo-3" role="tab" aria-controls="pinfo-3" aria-selected="true">
+                                (04) Review
+                            </a> *@
+                        </div>
+                    </nav>
+                </div>
+                <div class="tab-content pinfo-content" id="pinfoContent">
+                    <div class="tab-pane fade show active" id="pinfo-1" role="tabpanel" aria-labelledby="pinfo-1-tab">
+                        <p>@Html.Raw(Model.Description)</p>
+                    </div>
+                    <div class="tab-pane fade" id="pinfo-2" role="tabpanel" aria-labelledby="pinfo-2-tab">
+                        <ul class="adi-info list-unstyled mb-0">
+                            <li>Weight</li>
+                            <li>1.4 oz</li>
+                            <li>Dimensions</li>
+                            <li>62 × 56 × 12 in</li>
+                            <li>Size</li>
+                            <li>XL, XXL, LG, SM, MD</li>
+                            <li>Fabric</li>
+                            <li>Cotton, Silk &amp; Synthetic</li>
+                            <li>Warranty</li>
+                            <li>3 Months</li>
+                        </ul>
+                    </div>
+                    @* <div class="tab-pane fade" id="pinfo-3" role="tabpanel" aria-labelledby="pinfo-3-tab">
+                        <div class="pp-comments">
+                            <div class="comment d-flex">
+                                <div class="thumb">
+                                    <img src="assets/images/author/c-author-1.png" alt="img">
+                                </div>
+                                <div class="content pl-20">
+                                    <h5 class="name">Roger West -<span class="date">June 5, 2021</span></h5>
+                                    <div class="review d-flex">
+                                        <i class="fal fa-star"></i>
+                                        <i class="fal fa-star"></i>
+                                        <i class="fal fa-star"></i>
+                                        <i class="fal fa-star"></i>
+                                        <i class="fal fa-star"></i>
+                                    </div>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+                                </div>
+                            </div>
+                            <div class="comment d-flex">
+                                <div class="thumb">
+                                    <img src="assets/images/author/c-author-2.png" alt="img">
+                                </div>
+                                <div class="content pl-20">
+                                    <h5 class="name">Aayat West -<span class="date">June 9, 2021</span></h5>
+                                    <div class="review d-flex">
+                                        <i class="fal fa-star"></i>
+                                        <i class="fal fa-star"></i>
+                                        <i class="fal fa-star"></i>
+                                        <i class="fal fa-star"></i>
+                                        <i class="fal fa-star"></i>
+                                    </div>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pp-comments-form mt-50">
+                            <h4 class="title">Add a Review</h4>
+                            <div class="rev-top d-flex align-items-center mb-40">
+                                <span>Your Rating:</span>
+                                <div class="review d-flex align-items-center">
+                                    <a href="#0"><i class="fal fa-star"></i></a>
+                                    <a href="#0"><i class="fal fa-star"></i></a>
+                                    <a href="#0"><i class="fal fa-star"></i></a>
+                                    <a href="#0"><i class="fal fa-star"></i></a>
+                                    <a href="#0"><i class="fal fa-star"></i></a>
+                                </div>
+                            </div>
+                            <form action="https://xpressrow.com/html/cafena/cafena/index.html">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group mb-15">
+                                            <label for="message">YOUR REVIEW</label>
+                                            <textarea name="message" id="message"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-30">
+                                            <label for="message">Name</label>
+                                            <input type="text" name="name" id="name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-30">
+                                            <label for="email2">Email</label>
+                                            <input type="email" name="email2" id="email2">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <button class="site-btn">submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- product info end -->
+    <!-- releted products area start -->
+    <div class="releted-product__area pt-100 pb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <h2 class="rp-title mb-30">
+                        Các sản phẩm liên quan
+                    </h2>
+                </div>
+            </div>
+            <div class="row mt-none-30">
+                @{
+                    foreach (var item in ViewBag.ReletadProduct)
+                    {
+                        <div class="col-xl-3 col-lg-6 col-md-6 mt-30">
+                            <div class="pp__item pp__item--2 text-center pt-20 pb-20">
+                                <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
+                                    <div class="cart d-flex align-items-center justify-content-center">
+                                        <a href="javascript:void(0)" onclick="addToCart('@item.Id','1')"><i class="fal fa-shopping-basket"></i></a>
+                                    </div>
+                                    <div class="wishlist d-flex align-items-center justify-content-center">
+                                        <a href="#0"><i class="fal fa-heart"></i></a>
+                                    </div>
+                                    <div class="view d-flex align-items-center justify-content-center">
+                                        <a href="/san-pham/@item.MetaLink"><i class="fal fa-eye"></i></a>
+                                    </div>
+                                </div>
+                                <div class="pp__thumb pp__thumb--2 mt-35">
+                                    <img style="width: 150px" class="default" src="@item.MetaImage" alt="">
+                                    <img style="width: 150px" class="on-hover" src="@item.MetaImage" alt="">
+                                </div>
+                                <div class="pp__content pp__content--2 mt-25">
+                                    <div class="pp__c-top d-flex align-items-center justify-content-center">
+                                        <div class="pp__cat pp__cat--2">
+                                            <a href="/danh-muc/@item.CategoryMetaLink">@item.CategoryName</a>
+                                        </div>
+                                    </div>
+                                    <h4 class="pp__title pp__title--2">
+                                        <a href="/san-pham/@item.MetaLink">@item.Name</a>
+                                    </h4>
+                                    <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
+                                        <p class="label">Price - </p>
+                                        @{
+                                            if (item.Discount > 0)
+                                            {
+                                                <span class="price"> @Convert.ToInt32(item.Price - item.Price * item.Discount / 100).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")  / <span class="regular"><del>@Convert.ToInt32(item.Price).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")</del></span></span>
+                                                <span class="price ml-5 text-danger">-@item.Discount%</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="price"> @Convert.ToInt32(item.Price - item.Price * item.Discount / 100).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(",", ".")</span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <!-- releted products area end -->
+</main>
+@section Scripts {
+    <script>
+        $('#addCart').click(function () {
+            var Quantity = $('#txtNumber').val();
+            var Id = $(this).data('product');
+            if (Quantity != '') {
+                addToCart(Id, Quantity);
+            }
+        })
+    </script>
+}

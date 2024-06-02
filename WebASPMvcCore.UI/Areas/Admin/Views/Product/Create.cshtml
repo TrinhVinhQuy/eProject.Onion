@@ -1,0 +1,298 @@
+﻿@{
+    ViewData["Title"] = "Tạo sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <style>
+        #drop-area {
+            width: max-content;
+            border: 2px dashed #ccc;
+            padding: 20px;
+            transition: border 0.3s ease;
+        }
+
+            #drop-area.hover {
+                border-color: #007bff; /* Màu sắc khi hover */
+            }
+
+        #gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: left;
+        }
+
+        .obj-item {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin: 10px;
+        }
+    </style>
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <p class="m-0 font-weight-bold text-primary">Tạo sản phẩm</p>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="form-group col-lg-4">
+                <label for="txtModalName">Tên sản phẩm *</label>
+                <input type="text" class="form-control" id="txtModalName" placeholder="Tên sản phẩm" />
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="txtModalPrice">Đơn giá *</label>
+                <input type="number" class="form-control" id="txtModalPrice" placeholder="Đơn giá" />
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="txtModalDiscountPrice">Giảm giá nếu có</label>
+                <input type="number" class="form-control" id="txtModalDiscountPrice" placeholder="Giá sau giảm" />
+            </div>
+            <div class="form-group col-lg-12">
+                <label for="txtModalDescription">Mô tả *</label>
+                <div id="editor" class="ml-10 form form-control"></div>
+            </div>
+            <div class="form-group col-lg-12">
+                <label for="txtModalDescriptionShort">Mô tả ngắn *</label>
+                <input type="text" class="form-control" id="txtModalDescriptionShort" placeholder="Mô tả ngắn" />
+            </div>
+            <div class="form-group col-lg-12">
+                <label for="txtModalKeywords">Từ khoá *</label>
+                <input type="text" class="form-control" id="txtModalKeywords" placeholder="Từ khoá" />
+            </div>
+            <div class="form-group col-lg-6">
+                <label for="txtModalCategory">Danh mục</label>
+                <select class="form-control" id="txtModalCategory">
+                    @foreach (var category in ViewBag.Category)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-lg-4">
+                <label for="txtModalQuantity">Số lượng *</label>
+                <input type="number" class="form-control" id="txtModalQuantity" placeholder="Số lượng" />
+            </div>
+            <div class="form-group col-lg-12 d-flex align-items-center">
+                <div id="drop-area" ondragover="event.preventDefault()" ondrop="handleDrop(event)" ondragenter="this.classList.add('hover')" ondragleave="this.classList.remove('hover')">
+                    <h2>Upload hình ảnh</h2>
+                    <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
+                    <p class="text-danger m-0">Kích chuột vào ảnh khi xoá</p>
+                </div>
+                <div id="gallery"></div>
+            </div>
+            <div class="form-group col-lg-4">
+                <a href="#" id="save-btn" class="btn btn-primary">Lưu</a>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var uploadedImages = []; // Mảng chứa tên các tệp ảnh đã tải lên
+
+        function handleFiles(files) {
+            var gallery = document.getElementById("gallery");
+            var maxFiles = 4; // Số lượng tối đa hình ảnh được tải lên
+
+            for (var i = 0; i < files.length; i++) {
+                if (gallery.children.length >= maxFiles) {
+                    alert("Bạn chỉ có thể tải lên tối đa " + maxFiles + " hình ảnh.");
+                    return;
+                }
+
+                var file = files[i];
+                var imageType = /^image\//;
+
+                if (!imageType.test(file.type)) {
+                    continue;
+                }
+
+                if (uploadedImages.includes(file.name)) {
+                    alert("Ảnh " + file.name + " đã được tải lên trước đó.");
+                    continue;
+                }
+
+                var img = document.createElement("img");
+                img.classList.add("obj-item");
+                img.file = file;
+                img.onclick = function () {
+                    if (confirm("Bạn có chắc chắn muốn xoá ảnh này không?")) {
+                        this.parentNode.removeChild(this);
+                    }
+                };
+                gallery.appendChild(img);
+
+                uploadedImages.push(file.name); // Thêm tên tệp ảnh vào mảng
+
+                var reader = new FileReader();
+                reader.onload = (function (aImg) {
+                    return function (e) {
+                        aImg.src = e.target.result;
+                    };
+                })(img);
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            var dt = e.dataTransfer;
+            var files = dt.files;
+            handleFiles(files);
+        }
+
+        // Hàm bắt sự kiện thay đổi của input fileElem
+        document.getElementById('fileElem').addEventListener('change', function () {
+            console.log(this.value); // Log giá trị của input khi có sự thay đổi
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/ckeditor5-classic-free-full-feature@35.4.1/build/ckeditor.min.js"></script>
+    <script>
+        let editor;
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                plugins: ['Essentials',
+                    'Paragraph',
+                    'Heading',
+                    'Bold',
+                    'Italic',
+                    'Underline',
+                    'Strikethrough',
+                    'SourceEditing',
+                    'Subscript',
+                    'Superscript',
+                    'Alignment',
+                    'Indent',
+                    'IndentBlock',
+                    'BlockQuote',
+                    'Link',
+                    'Image',
+                    'ImageCaption',
+                    'ImageStyle',
+                    'ImageToolbar',
+                    'ImageUpload',
+                    'List',
+                    'MediaEmbed',
+                    'PasteFromOffice',
+                    'Table',
+                    'TableToolbar',
+                    'TableProperties',
+                    'TableCellProperties',
+                    'Highlight',
+                    'FontFamily',
+                    'FontSize',
+                    'FontColor',
+                    'FontBackgroundColor', 'GeneralHtmlSupport', /* ... */]
+            })
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#save-btn").click(function () {
+                // Kiểm tra các giá trị trước khi lưu
+                var productName = $("#txtModalName").val().trim();
+                var productPrice = $("#txtModalPrice").val().trim();
+                var productPriceDiscount = $("#txtModalDiscountPrice").val().trim();
+                var productDescription = editor.getData();
+                var productDescriptionShort = $("#txtModalDescriptionShort").val().trim();
+                var productKeywords = $("#txtModalKeywords").val().trim();
+                var productCategory = $("#txtModalCategory").val().trim();
+                var productQuantity = $("#txtModalQuantity").val().trim();
+                var uploadedImageCount = $("#gallery").children().length;
+
+                // Thực hiện kiểm tra các giá trị
+                if (productName === "") {
+                    alert("Vui lòng nhập tên sản phẩm.");
+                    return;
+                }
+                if (productPrice === "") {
+                    alert("Vui lòng nhập đơn giá.");
+                    return;
+                }
+                if (isNaN(productPrice) || parseFloat(productPrice) <= 0) {
+                    alert("Đơn giá phải là một số lớn hơn 0.");
+                    return;
+                }
+                if (productQuantity === "") {
+                    alert("Vui lòng nhập số lượng.");
+                    return;
+                }
+                if (isNaN(productQuantity) || parseInt(productQuantity) <= 0) {
+                    alert("Số lượng phải là một số nguyên dương.");
+                    return;
+                }
+                if (productDescription === "") {
+                    alert("Vui lòng nhập mô tả sản phẩm.");
+                    return;
+                }
+                if (productDescriptionShort === "") {
+                    alert("Vui lòng nhập mô tả ngắn sản phẩm.");
+                    return;
+                }
+                if (productKeywords === "") {
+                    alert("Vui lòng nhập từ khóa.");
+                    return;
+                }
+                if (productCategory === "") {
+                    alert("Vui lòng chọn danh mục sản phẩm.");
+                    return;
+                }
+                if (uploadedImageCount === 0) {
+                    alert("Vui lòng tải lên ít nhất một hình ảnh.");
+                    return;
+                }
+                // Tạo đối tượng FormData để chứa dữ liệu
+                var formData = new FormData();
+                // Thêm dữ liệu văn bản vào formData
+                formData.append("Name", $("#txtModalName").val().trim());
+                formData.append("Price", $("#txtModalPrice").val().trim());
+                formData.append("Discount", $("#txtModalDiscountPrice").val().trim());
+                formData.append("Description", editor.getData());
+                formData.append("MetaDescription", $("#txtModalDescriptionShort").val().trim());
+                formData.append("MetaKeywords", $("#txtModalKeywords").val().trim());
+                formData.append("CategoryId", $("#txtModalCategory").val().trim());
+                formData.append("Quantity", $("#txtModalQuantity").val().trim());
+                let countName = 0;
+                // Lặp qua từng hình ảnh trong #gallery và thêm vào formData
+                $("#gallery img").each(function () {
+                    var url = $(this)[0].src;
+                    var filename = url.substring(url.lastIndexOf('/') + 1); // Lấy phần cuối của URL, đó chính là tên file
+                    var file = dataURLtoFile(url, uploadedImages[countName++]);
+                    formData.append("Images", file);
+                });
+                // Thêm các điều kiện kiểm tra khác tùy theo yêu cầu
+                $.ajax({
+                    url: "/Admin/Product/Create",
+                    method: "POST",
+                    data: formData,
+                    contentType: false, // Đặt contentType: false để tránh tự động thiết lập header
+                    processData: false, // Đặt processData: false để không xử lý dữ liệu gửi đi
+                    success: function (response) {
+                        alert("Sản phẩm đã được tạo thành công!");
+                    },
+                    error: function (xhr, status, error) {
+                        // Xử lý lỗi nếu có
+                        alert("Đã xảy ra lỗi: " + error);
+                    }
+                });
+            });
+        });
+        // Hàm chuyển đổi định dạng dữ liệu hình ảnh thành file
+        function dataURLtoFile(dataurl, filename) {
+            var arr = dataurl.split(','),
+                mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, { type: mime });
+        }
+    </script>
+}

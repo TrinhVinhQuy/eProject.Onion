@@ -1,0 +1,169 @@
+﻿@{
+    ViewData["Title"] = "Danh sách sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <a href="/Admin/Product/Create" target="_blank" class="m-0 font-weight-bold text-primary">Thêm sản phẩm</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-bordered" width="100%" style="min-width: 1000px;" cellspacing="0">
+                <thead>
+                    <tr>
+                        @* <th>Mã sản phẩm </th> *@
+                        <th>Tên </th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Giá giảm</th>
+                        <th>Số lượng</th>
+                        <th>Ngày tạo</th>
+                        <th>#</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                "ajax": {
+                    "url": "/admin/product-get-all",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    // { "data": "id" },
+                    { "data": "name", },
+                    {
+                        "data": "metaImage",
+                        "render": function (data, type, row) {
+                            return '<img src="' + data + '" alt="Product Image" width="100">';
+                        }
+                    },
+                    { "data": "price" },
+                    { "data": "discount" },
+                    { "data": "quantity" },
+                    {
+                        "data": "createOn",
+                        "render": function (data, type, row) {
+                            return moment(data).format('DD/MM/YYYY HH:mm:ss'); // Định dạng thời gian theo định dạng mong muốn
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            return '<a href="/Admin/Product/Detail?Id=' + row.id + '" class="m-0 font-weight-bold text-primary">Chi tiết</a>';
+                        }
+                    },
+                    {
+                        "data": "isActive",
+                        "render": function (data, type, row) {
+                            let action = data ? 'Khoá' : 'Mở khoá';
+                            return `<a href="javascript:void(0)" class="m-0 font-weight-bold text-primary" onclick="IsActive('${row.id}', ${!data})">${action}</a>`;
+                        }
+                    }
+                ],
+                "order": [
+                    [5, 'asc'] // Sắp xếp cột đầu tiên (cột ID) theo thứ tự giảm dần
+                ],
+                "lengthMenu": [25, 50],
+                "language": {
+                    processing: "Message khi đang tải dữ liệu",
+                    search: "Tìm kiếm",
+                    lengthMenu: "Điều chỉnh số mục trên 1 trang _MENU_ ",
+                    info: "Hiển thị _START_ đến _END_ trong  _TOTAL_ mục",
+                    infoEmpty: "Không có dữ liệu, Hiển thị 0 bản ghi trong _MAX_ tổng cộng 0 ",
+                    infoFiltered: "(Không có sản phẩm trong _MAX_ bản ghi)",
+                    loadingRecords: "",
+                    zeroRecords: "Không có dữ liệu theo tìm kiếm",
+                    emptyTable: "Hiện tại chưa có đơn hàng mới",
+                    paginate: {
+                        first: "<<",
+                        previous: "<",
+                        next: ">",
+                        last: ">>"
+                    },
+                    aria: {
+                        sortAscending: ": Message khi đang sắp xếp theo column",
+                        sortDescending: ": Message khi đang sắp xếp theo column",
+                    }
+                },
+                "processing": true,
+                "serverSide": false,
+            });
+        });
+        function IsActive(Id, IsActive) {
+            var formData = new FormData();
+            formData.append("Id", Id);
+            formData.append("IsActive", IsActive);
+            // Confirmation message based on the action
+            var action = IsActive ? 'khoá' : 'mở khoá';
+            var confirmMessage = `Bạn có chắc chắn muốn ${action} sản phẩm này không?`;
+
+            // Show confirmation dialog
+            if (confirm(confirmMessage)) {
+                // If user confirms, proceed with the AJAX request
+                var formData = new FormData();
+                formData.append("Id", Id);
+                formData.append("IsActive", IsActive);
+                $.ajax({
+                    url: "/admin/product-isactive-id",
+                    method: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        alert("Cập nhật thành công!");
+                        // Optionally, reload the DataTable or update the row here
+                        $('#dataTable').DataTable().ajax.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error if any
+                        alert("Đã xảy ra lỗi: " + error);
+                    }
+                });
+            }
+        }
+    </script>
+    <!-- Thư viện real-time Signalr -->
+    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@@5.0.0/dist/browser/signalr.min.js"></script>
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
+        connection.on("NewProductHub", function () {
+            $('#dataTable').DataTable().ajax.reload();
+        });
+
+        // Hàm để khởi động lại kết nối
+        function startConnection() {
+            connection.start().then(function () {
+                console.log("Connection started");
+            }).catch(function (err) {
+                console.error("Error while starting connection: " + err);
+                // Nếu không thể kết nối, thực hiện tái kết nối sau một khoảng thời gian
+                setTimeout(startConnection, 5000); // Ví dụ: kết nối lại sau 5 giây
+            });
+        }
+
+        // Khởi động kết nối ban đầu
+        startConnection();
+
+        // Xử lý sự kiện khi kết nối bị đóng
+        connection.onclose(function (error) {
+            console.log("Connection closed: " + error);
+            // Nếu kết nối bị đóng, thực hiện tái kết nối sau một khoảng thời gian
+            setTimeout(startConnection, 5000); // Ví dụ: kết nối lại sau 5 giây
+        });
+    </script>
+}
+
+
